@@ -1,0 +1,74 @@
+/* Custom Color Variables */
+:root {
+  --primary-blue: #0077B6;
+  --secondary-green: #00CC66;
+  --light-gray: #f8f9fa;
+  --dark-gray: #343a40;
+}
+
+/* Button Overrides */
+.btn-primary {
+  background-color: var(--primary-blue);
+  border-color: var(--primary-blue);
+}
+.btn-primary:hover {
+  background-color: #0067a3;
+  border-color: #005c91;
+}
+
+.btn-outline-primary {
+  color: var(--primary-blue);
+  border-color: var(--primary-blue);
+}
+.btn-outline-primary:hover {
+  background-color: var(--primary-blue);
+}
+
+/* Navbar Customization */
+.navbar {
+  min-height: 90px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand img {
+  height: 75px;
+  transition: transform 0.3s;
+}
+
+.navbar-nav .nav-link {
+  font-size: 1.15rem;
+  font-weight: 500;
+  padding: 1.1rem 1.5rem;
+  position: relative;
+}
+
+/* Form Controls */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 0.2rem rgba(0, 119, 182, 0.25);
+}
+
+/* Cards */
+.feature-card {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+}
+.feature-card:hover {
+  border-color: var(--primary-blue);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 991.98px) {
+  .navbar {
+    min-height: auto;
+    padding: 1rem 0;
+  }
+  .navbar-brand img {
+    height: 60px;
+  }
+  .navbar-nav .nav-link {
+    padding: 0.8rem 1rem;
+  }
+}

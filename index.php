@@ -1,12 +1,12 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Borrow My Charger - Find EV Charging Points</title>
-    <!-- Bootstrap 5 CSS -->
+     Bootstrap 5 CSS 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome for icons -->
+     Font Awesome for icons 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -201,7 +201,7 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
+     Navigation 
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <div class="container">
             <a class="navbar-brand" href="#">
@@ -230,7 +230,7 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
+     Hero Section 
     <section class="hero-section">
         <div class="container">
             <div class="row">
@@ -286,7 +286,7 @@
         </div>
     </section>
 
-    <!-- Features Section -->
+     Features Section 
     <section class="container mb-5">
         <div class="row text-center mb-5">
             <div class="col-12">
@@ -328,7 +328,7 @@
         </div>
     </section>
 
-    <!-- Map Preview Section -->
+     Map Preview Section 
     <section class="bg-light py-5">
         <div class="container">
             <div class="row align-items-center">
@@ -347,7 +347,7 @@
         </div>
     </section>
 
-    <!-- Call to Action -->
+     Call to Action 
     <section class="py-5">
         <div class="container text-center">
             <h2 class="fw-bold mb-4">Ready to get started?</h2>
@@ -359,7 +359,7 @@
         </div>
     </section>
 
-    <!-- Footer -->
+     Footer 
     <footer>
         <div class="container">
             <div class="row">
@@ -410,9 +410,9 @@
         </div>
     </footer>
 
-    <!-- Bootstrap JS Bundle with Popper -->
+     Bootstrap JS Bundle with Popper 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom JS -->
+     Custom JS 
     <script>
         // This would be replaced with your actual search functionality
         document.getElementById('searchForm').addEventListener('submit', function(e) {
@@ -424,4 +424,10 @@
         });
     </script>
 </body>
-</html>
+</html>-->
+
+<?php
+
+$view = new stdClass();
+$view->pageTitle = 'Homepage';
+require_once('Views/index.phtml');
