@@ -1,28 +1,24 @@
 <?php
+// Login.php
+
 session_start();
+require_once "Models/Login.php"; // make sure path is correct
 
 $loginError = "";
 
-// Hardcoded credentials for demo
-$validUser = "user@user.com";
-$validPass = "123456";
-
-// Handle form submission
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $email = $_POST['email'] ?? '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
 
-    if ($email === $validUser && $password === $validPass) {
-        $_SESSION['userId'] = $email;
+    $loginModel = new Login();
+
+    if ($loginModel->authenticate($email, $password)) {
+        $_SESSION['user'] = $email;
         header("Location: index.php");
-        exit;
+        exit();
     } else {
-        $loginError = "Invalid username or password.";
+        $loginError = "Invalid email or password.";
     }
 }
 
-// Show form with layout
-require 'Views/template/header.phtml';
-require 'Views/login.phtml';
-require 'Views/template/footer.phtml';
-?>
+include "Views/Login.phtml";
