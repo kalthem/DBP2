@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Borrow My Charger</title>
+  <link rel="stylesheet" href="/css/bootstrap-theme.css">
+  <link rel="stylesheet" href="/css/my-style.css">
+</head>
+<body>
+
+<?php include __DIR__ . "/template/header.phtml"; ?>
+
+<div class="login-wrapper">
+  <div class="login-box">
+    <div class="login-left">
+      <img src="/images/BMC_LOGO.png" alt="BMC Logo" class="logo">
+      <h2>Sign in</h2>
+      <p>with your Borrow My Charger account.</p>
+
+      <?php if (!empty($loginError)): ?>
+        <div class="alert alert-danger"><?= htmlspecialchars($loginError) ?></div>
+      <?php endif; ?>
+
+      <form method="post" action="/Login.php">
+        <input type="email" name="email" placeholder="Email or phone" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <div class="form-actions">
+          <a href="#">Forgot password?</a>
+        </div>
+        <button type="submit">Next</button>
+        <div class="bottom-links">
+          <a href="#">Create account</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<?php include __DIR__ . "/template/footer.phtml"; ?>
+
+</body>
+</html>
