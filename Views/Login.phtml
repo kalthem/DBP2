@@ -1,42 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Login - Borrow My Charger</title>
-  <link rel="stylesheet" href="/css/bootstrap-theme.css">
-  <link rel="stylesheet" href="/css/my-style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Borrow My Charger</title>
+    <link rel="stylesheet" href="/css/bootstrap-theme.css">
+    <link rel="stylesheet" href="/css/my-style.css">
 </head>
-<body>
+<body class="bg-light">
 
-<?php include __DIR__ . "/template/header.phtml"; ?>
+    <!-- Header Partial -->
+    <?php require_once 'Views/template/header.phtml'; ?>
 
-<div class="login-wrapper">
-  <div class="login-box">
-    <div class="login-left">
-      <img src="/images/BMC_LOGO.png" alt="BMC Logo" class="logo">
-      <h2>Sign in</h2>
-      <p>with your Borrow My Charger account.</p>
+    <main class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <img src="/images/BMC_LOGO.png" alt="Borrow My Charger Logo" class="logo mb-3">
+                            <h2 class="mb-3">Sign In</h2>
+                            <p class="text-muted">Access your Borrow My Charger account</p>
+                        </div>
 
-      <?php if (!empty($loginError)): ?>
-        <div class="alert alert-danger"><?= htmlspecialchars($loginError) ?></div>
-      <?php endif; ?>
+                        <!-- Error Messages -->
+                        <?php if (!empty($loginError)): ?>
+                            <div class="alert alert-danger">
+                                <?= htmlspecialchars($loginError) ?>
+                            </div>
+                        <?php endif; ?>
 
-      <form method="post" action="/Login.php">
-        <input type="email" name="email" placeholder="Email or phone" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <div class="form-actions">
-          <a href="#">Forgot password?</a>
+                        <!-- Login Form -->
+                        <form method="POST" action="/login">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <a href="/forgot-password" class="text-decoration-none">Forgot password?</a>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 py-2">Sign In</button>
+                        </form>
+
+                        <hr class="my-4">
+                        <p class="text-center text-muted">
+                            Don’t have an account? <a href="/register" class="text-decoration-none">Create one</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <button type="submit">Next</button>
-        <div class="bottom-links">
-          <a href="#">Create account</a>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+    </main>
 
-<?php include __DIR__ . "/template/footer.phtml"; ?>
+    <!-- Footer Partial -->
+    <?php require_once 'Views/template/footer.phtml'; ?>
 
 </body>
 </html>
