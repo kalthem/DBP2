@@ -1,8 +1,25 @@
 <?php
 session_start();
 
-// Load shared layout + main content view
-require 'views/template/header.phtml';
-require 'views/index.phtml';
-require 'views/template/footer.phtml';
+// Load header
+require 'Views/template/header.phtml';
+
+// Get lowercase action for consistency
+$action = strtolower($_GET['action'] ?? 'home');
+
+switch ($action) {
+    case 'about':
+        require 'Views/about.phtml';
+        break;
+    case 'howitworks':
+        require 'Views/howitworks.phtml';
+        break;
+    case 'home':
+    default:
+        require 'Views/index.phtml';
+        break;
+}
+
+// Load footer
+require 'Views/template/footer.phtml';
 ?>
