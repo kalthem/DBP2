@@ -1,21 +1,46 @@
-<section class="container py-5">
-  <h1 class="mb-4 text-center">About Borrow My Charger</h1>
-  <p class="lead">
-    Borrow My Charger is a community-driven electric vehicle (EV) charger rental platform that connects EV owners with local homeowners who have private charge points.
-    Our goal is to make EV charging more accessible and convenient for everyone — especially in areas where public charging stations are limited.
-  </p>
-  <p>
-    Homeowners can earn passive income by listing their available charging points, while EV drivers can search, book, and charge in nearby neighborhoods — saving time, money, and stress.
-  </p>
-  <p>
-    The platform supports:
-    <ul>
-      <li>Location-based charge point search with filters</li>
-      <li>Role-based access for Admins, Homeowners, and Users</li>
-      <li>Booking management with approval workflows</li>
-      <li>Google Maps integration for interactive browsing</li>
-      <li>Secure login, password encryption, and performance optimization</li>
-    </ul>
-  </p>
-  
-</section>
+<?php include 'template/header.phtml'; ?>
+
+<div class="container py-5 text-center">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-10">
+            <h1 class="display-4 mb-4">Welcome to Borrow My Charger</h1>
+            <p class="lead mb-4">
+                Need to charge your EV while on the go? Or want to make extra income by renting out your home charger?
+                You've come to the right place.
+            </p>
+            <a href="index.php?action=howitworks" class="btn btn-primary btn-lg">Learn How It Works</a>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <h2 class="text-center mb-4">Why Borrow My Charger?</h2>
+    <div class="row text-center">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Convenient Charging</h5>
+                    <p class="card-text">Find nearby EV charge points wherever you are, with flexible booking times.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Earn While You Sleep</h5>
+                    <p class="card-text">Homeowners can earn passive income by sharing their unused charger.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Eco-Friendly</h5>
+                    <p class="card-text">Support sustainable travel and help expand the EV charging network.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php include 'template/footer.phtml'; ?>
