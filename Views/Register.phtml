@@ -1,11 +1,14 @@
+<?php
+$baseUrl = 'http://20.126.5.244/~u202200053/BorrowMyCharger';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register | Borrow My Charger</title>
-    <link rel="stylesheet" href="/css/bootstrap-theme.css">
-    <link rel="stylesheet" href="/css/my-style.css">
+    <link rel="stylesheet" href="<?= $baseUrl ?>/css/bootstrap-theme.css">
+    <link rel="stylesheet" href="<?= $baseUrl ?>/css/my-style.css">
 </head>
 <body class="bg-light">
 
@@ -29,7 +32,7 @@
                         <?php endif; ?>
 
                         <!-- Registration Form -->
-                        <form method="POST" action="RegisterController.php">
+                        <form method="POST" action="<?= $baseUrl ?>/Controllers/RegisterController.php">
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
                                 <input type="email" class="form-control" id="email" name="username" required>
@@ -58,7 +61,7 @@
 
                         <hr class="my-4">
                         <p class="text-center text-muted">
-                            Already have an account? <a href="LoginController.php">Log in</a>
+                            Already have an account? <a href="<?= $baseUrl ?>/Controllers/LoginController.php">Log in</a>
                         </p>
                     </div>
                 </div>
