@@ -1,4 +1,7 @@
-<?php include 'template/header.phtml'; ?>
+<?php
+$baseUrl = 'http://20.126.5.244/~u202200053/BorrowMyCharger';
+include __DIR__ . '/template/header.phtml';
+?>
 
 <div class="container py-5 text-center">
     <div class="row justify-content-center align-items-center">
@@ -8,7 +11,7 @@
                 Need to charge your EV while on the go? Or want to make extra income by renting out your home charger?
                 You've come to the right place.
             </p>
-            <a href="index.php?action=howitworks" class="btn btn-primary btn-lg">Learn How It Works</a>
+            <a href="<?= $baseUrl ?>/index.php?action=howitworks" class="btn btn-primary btn-lg">Learn How It Works</a>
         </div>
     </div>
 </div>
@@ -43,4 +46,4 @@
     </div>
 </div>
 
-<?php include 'template/footer.phtml'; ?>
+<?php include __DIR__ . '/template/footer.phtml'; ?>

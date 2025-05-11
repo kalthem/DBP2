@@ -3,6 +3,8 @@ session_start();
 require_once __DIR__ . '/../db_connect.php';
 require_once __DIR__ . '/../Models/User.php';
 
+$baseUrl = 'http://20.126.5.244/~u202200053/BorrowMyCharger';
+
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -39,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $userModel->insertUser($username, $name, $hashedPassword, $role, $status);
 
             $_SESSION['registration_success'] = true;
-            header('Location: LoginController.php');
+            header('Location: ' . $baseUrl . '/Controllers/LoginController.php');
             exit();
         } catch (Exception $e) {
             $errors[] = $e->getMessage();

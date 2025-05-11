@@ -1,7 +1,13 @@
 <?php
 session_start();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once __DIR__ . '/../db_connect.php';
 require_once __DIR__ . '/../Models/User.php';
+
+$baseUrl = 'http://20.126.5.244/~u202200053/BorrowMyCharger';
 
 $loginError = "";
 
@@ -42,12 +48,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'status' => $user['status']
                 ];
 
-                $dashboard = match ($user['role']) {
-                    'admin' => '../Views/adminDashBoard.phtml',
-                    'homeowner' => '../Views/homeOwnerDashBoard.phtml',
-                    'user' => '../Views/userDashBoard.phtml',
-                    default => '../index.php'
-                };
+                // PHP 7+ compatible version
+                switch ($user['role']) {
+                    case 'admin':
+                        $dashboard = $baseUrl . '/Views/adminDashBoard.phtml';
+                        break;
+                    case 'homeowner':
+                        $dashboard = $baseUrl . '/Views/homeOwnerDashBoard.phtml';
+                        break;
+                    case 'user':
+                        $dashboard = $baseUrl . '/Views/userDashBoard.phtml';
+                        break;
+                    default:
+                        $dashboard = $baseUrl . '/index.php';
+                        break;
+                }
 
                 header("Location: $dashboard");
                 exit();
@@ -56,4 +71,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+// If not POST or something failed, show form again
 require_once __DIR__ . '/../Views/Login.phtml';
