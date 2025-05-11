@@ -3,6 +3,11 @@ session_start();
 require_once __DIR__ . '/../db_connect.php';
 require_once __DIR__ . '/../Models/User.php';
 
+<<<<<<< Updated upstream
+=======
+$baseUrl = 'http://20.126.5.244/~u202103011/BorrowMyCharger';
+
+>>>>>>> Stashed changes
 $loginError = "";
 
 // Show success alert from registration

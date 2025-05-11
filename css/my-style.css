@@ -1,179 +1,76 @@
-/* Base Styles */
-body {
-  font-family: 'Roboto', sans-serif;
-  padding-top: 90px;
-  background-color: #ffffff;
+/* Custom Color Theme */
+:root {
+    --primary-color: #2A9D8F;    /* Teal */
+    --secondary-color: #E76F51;  /* Coral */
+    --dark-color: #264653;       /* Charcoal */
+    --light-color: #F4F4F4;
 }
 
-/* Hero Section */
-.hero-section {
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-              url('https://images.unsplash.com/photo-1606220838315-056192d5e927?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-  background-size: cover;
-  background-position: center;
-  color: white;
-  padding: 100px 0;
-  margin-bottom: 50px;
+/* Override Bootstrap Colors */
+.navbar {
+    background-color: var(--primary-color) !important;
+    padding: 0.8rem 1rem;
 }
 
-.search-box {
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+.btn-primary {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
 }
 
-/* Feature Icons */
-.feature-icon {
-  font-size: 2.5rem;
-  color: var(--primary-blue);
-  margin-bottom: 20px;
+.btn-primary:hover {
+    background-color: var(--dark-color) !important;
+    border-color: var(--dark-color) !important;
 }
 
-/* Interactive Elements */
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+/* Navbar Links */
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.navbar-dark .navbar-nav .nav-link.active {
+    color: #fff !important;
+    font-weight: 500;
+}
+
+/* Login/Register Buttons */
+.btn-outline-light {
+    border-color: var(--light-color) !important;
+    color: var(--light-color) !important;
+}
+
+.btn-outline-light:hover {
+    background-color: var(--dark-color) !important;
+    color: var(--light-color) !important;
+}
+
+/* Logo Hover Effect */
+.navbar-brand img {
+    transition: transform 0.3s ease;
+}
+
 .navbar-brand:hover img {
-  transform: scale(1.05);
+    transform: scale(1.05);
 }
 
-.nav-link:hover,
-.nav-link.active {
-  color: var(--primary-blue) !important;
+
+/* Main Content Padding */
+main {
+    padding-top: 80px;
+    min-height: calc(100vh - 120px);
 }
 
-.nav-link.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 1.5rem;
-  right: 1.5rem;
-  height: 3px;
-  background: var(--primary-blue);
-}
-
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Map Preview */
-.map-preview {
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* Footer */
+/* Footer Styling */
 footer {
-  background-color: var(--dark-gray);
-  color: white;
-  padding: 50px 0 20px;
-  margin-top: 50px;
-}
-
-.social-icons a {
-  color: white;
-  transition: all 0.3s;
-}
-.social-icons a:hover {
-  color: var(--secondary-green);
-  transform: translateY(-3px);
-}
-
-/* Mobile Optimizations */
-@media (max-width: 767.98px) {
-  body {
-    padding-top: 0;
-  }
-  .hero-section {
-    padding: 60px 0;
-  }
-  .search-box {
-    padding: 20px;
-  }
-}
-
-/* ----------------------------------------
-   Login Page Styling (Added Below)
----------------------------------------- */
-.login-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 90vh;
-  background-color: #f2f6fc;
-}
-
-.login-box {
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  padding: 40px;
-  max-width: 400px;
-  width: 100%;
-}
-
-.login-left {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.logo {
-  max-height: 60px;
-  margin-bottom: 20px;
-}
-
-.login-left h2 {
-  font-size: 24px;
-  margin: 0 0 10px;
-}
-
-.login-left p {
-  margin-bottom: 20px;
-  color: #5f6368;
-}
-
-input[type="email"],
-input[type="password"] {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  border: 1px solid #dadce0;
-  border-radius: 4px;
-}
-
-button {
-  width: 100%;
-  padding: 12px;
-  background-color: #1a73e8;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #155ab6;
-}
-
-.form-actions {
-  text-align: right;
-  width: 100%;
-  margin-bottom: 15px;
-}
-
-.form-actions a {
-  color: #1a73e8;
-  text-decoration: none;
-}
-
-.bottom-links {
-  text-align: center;
-  margin-top: 15px;
-}
-
-.bottom-links a {
-  color: #1a73e8;
-  text-decoration: none;
+    background-color: var(--dark-color) !important;
+    color: var(--light-color);
+    padding: 2rem 0;
+    margin-top: auto;
 }
