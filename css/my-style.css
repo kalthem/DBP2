@@ -1,11 +1,11 @@
-/* Base Styles */
+/* Base Styles 
 body {
   font-family: 'Roboto', sans-serif;
   padding-top: 90px;
   background-color: #ffffff;
 }
 
-/* Hero Section */
+ Hero Section 
 .hero-section {
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
               url('https://images.unsplash.com/photo-1606220838315-056192d5e927?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
@@ -23,14 +23,14 @@ body {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Feature Icons */
+ Feature Icons 
 .feature-icon {
   font-size: 2.5rem;
   color: var(--primary-blue);
   margin-bottom: 20px;
 }
 
-/* Interactive Elements */
+ Interactive Elements 
 .navbar-brand:hover img {
   transform: scale(1.05);
 }
@@ -55,14 +55,14 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Map Preview */
+ Map Preview 
 .map-preview {
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Footer */
+ Footer 
 footer {
   background-color: var(--dark-gray);
   color: white;
@@ -79,7 +79,7 @@ footer {
   transform: translateY(-3px);
 }
 
-/* Mobile Optimizations */
+ Mobile Optimizations 
 @media (max-width: 767.98px) {
   body {
     padding-top: 0;
@@ -92,9 +92,9 @@ footer {
   }
 }
 
-/* ----------------------------------------
+ ----------------------------------------
    Login Page Styling (Added Below)
----------------------------------------- */
+---------------------------------------- 
 .login-wrapper {
   display: flex;
   justify-content: center;
@@ -176,4 +176,196 @@ button:hover {
 .bottom-links a {
   color: #1a73e8;
   text-decoration: none;
+}*/
+
+
+/* Custom Color Theme 
+:root {
+    --primary-color: #2A9D8F;     Teal 
+    --secondary-color: #E76F51;   Coral 
+    --dark-color: #264653;        Charcoal 
+    --light-color: #F4F4F4;
+}
+
+ Override Bootstrap Colors 
+.navbar {
+    background-color: var(--primary-color) !important;
+    padding: 0.8rem 1rem;
+}
+
+.btn-primary {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--dark-color) !important;
+    border-color: var(--dark-color) !important;
+}
+
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+ Navbar Links 
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.navbar-dark .navbar-nav .nav-link.active {
+    color: #fff !important;
+    font-weight: 500;
+}
+
+ Login/Register Buttons 
+.btn-outline-light {
+    border-color: var(--light-color) !important;
+    color: var(--light-color) !important;
+}
+
+.btn-outline-light:hover {
+    background-color: var(--dark-color) !important;
+    color: var(--light-color) !important;
+}
+
+ Logo Hover Effect 
+.navbar-brand img {
+    transition: transform 0.3s ease;
+}
+
+.navbar-brand:hover img {
+    transform: scale(1.05);
+}
+
+
+ Main Content Padding 
+main {
+    padding-top: 80px;
+    min-height: calc(100vh - 120px);
+}
+
+ Footer Styling 
+footer {
+    background-color: var(--dark-color) !important;
+    color: var(--light-color);
+    padding: 2rem 0;
+    margin-top: auto;
+}
+
+
+ Option 1: Target the logo class directly 
+.logo {
+  max-width: 100px;  Adjust this value as needed 
+  height: auto;
+  display: block;
+  margin: 0 auto;  Centers the logo if needed 
+}
+
+ Option 2: More specific targeting 
+img.logo.mb-3 {
+  width: 150px;  Fixed width 
+  height: auto;  Maintain aspect ratio 
+  object-fit: contain;
+}
+
+ Option 3: Constrain within parent container 
+.login-form-container img.logo {
+  max-width: 30%;  Percentage-based sizing 
+  max-height: 80px;
+}*/
+
+
+/* ===== BORROW MY CHARGER - FINAL POLISHED ===== */
+:root {
+  /* Original Color Palette */
+  --primary-color: #2A9D8F;    /* Main teal */
+  --secondary-color: #E76F51;  /* Coral */
+  --dark-color: #264653;       /* Charcoal */
+  --light-color: #F4F4F4;
+}
+
+/* ===== BUTTON SYSTEM ===== */
+/* Primary Button (formerly btn-register) */
+.btn-primary {
+  background-color: var(--primary-color) !important;
+  border: none !important;
+  color: white !important;
+  padding: 6px 16px;
+  transition: all 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #238C7F !important;
+  transform: translateY(-1px);
+}
+
+/* Secondary Button (login) */
+.btn-outline-light {
+  border: 1px solid white !important;
+  color: white !important;
+  background: transparent !important;
+  padding: 6px 16px;
+  margin-right: 8px; /* Space between buttons */
+  transition: all 0.2s;
+}
+
+.btn-outline-light:hover {
+  background: rgba(255,255,255,0.1) !important;
+}
+
+/* Danger Button (delete/cancel actions) */
+.btn-danger {
+  background-color: #dc3545 !important;
+  padding: 6px 16px;
+}
+
+/* ===== COMPONENTS ===== */
+/* Header */
+.navbar {
+  background-color: var(--primary-color) !important;
+  padding: 10px 20px;
+  height: 60px;
+}
+
+.navbar-brand img.logo {
+  height: 40px;
+}
+
+/* Footer */
+footer {
+  background-color: var(--dark-color) !important;
+  color: var(--light-color);
+  padding: 10px 0;
+  height: 40px;
+}
+
+/* Main Content */
+main {
+  padding-top: 60px; /* Header height */
+  padding-bottom: 20px;
+  min-height: calc(100vh - 120px); /* 60px header + 40px footer */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .btn-primary, 
+  .btn-outline-light {
+    padding: 5px 12px;
+    margin-right: 6px;
+  }
+  
+  .navbar-brand img.logo {
+    height: 36px;
+  }
+}
+
+.logo {
+  max-width: 100px; 
+  height: auto;
+  display: block;
+  margin: 0 auto;  
 }

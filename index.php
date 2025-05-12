@@ -5,10 +5,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 // Hardcoded full path to your actual project folder
-$basePath = '/home/u202200053/public_html/BorrowMyCharger';
-
-// Load header
-require $basePath . '/Views/template/header.phtml';
+$basePath = '/home/u202103011/public_html/BorrowMyCharger';
 
 // Get lowercase action for consistency
 $action = strtolower($_GET['action'] ?? 'home');
@@ -32,5 +29,3 @@ switch ($action) {
         break;
 }
 
-// Load footer
-require $basePath . '/Views/template/footer.phtml';
