@@ -1,0 +1,135 @@
+<?php
+// MUST be first - no whitespace before!
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+
+// Define base paths
+$baseUrl = 'http://20.126.5.244/~u202103011/BorrowMyCharger';
+$basePath = '/home/u202103011/public_html/BorrowMyCharger';
+
+// Secure session check
+if (empty($_SESSION['user']['id'])) {
+    header("Location: $baseUrl/index.php?action=login");
+    exit;
+}
+
+// Get username safely
+$username = !empty($_SESSION['user']['name']) ? htmlspecialchars($_SESSION['user']['name']) : 'User';
+
+require_once $basePath . '/Models/Booking.php';
+require_once $basePath . '/Models/ChargePoint.php';
+require_once $basePath . '/db_connect.php';
+
+$database = Database::getInstance();
+$pdo = $database->getdbConnection();
+$bookingModel = new Booking($pdo);
+$chargePointModel = new ChargePoint($pdo);
+
+// Get user's bookings
+$userId = (int)$_SESSION['user']['id'];
+$bookings = $bookingModel->getUserBookings($userId);
+
+// Define header/footer paths
+$headerPath = __DIR__ . '/template/header.phtml';
+$footerPath = __DIR__ . '/template/footer.phtml';
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Booking History - BorrowMyCharger</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="base-url" content="<?= $baseUrl ?>">
+    <link rel="stylesheet" href="<?= $baseUrl ?>/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= $baseUrl ?>/css/my-style.css">
+</head>
+<body>
+
+<!-- Header -->
+<?php 
+if (file_exists($headerPath) && is_readable($headerPath)) {
+    include $headerPath;
+}
+?>
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Your Booking History</h2>
+        <a href="<?= $baseUrl ?>/Views/userDashBoard.phtml" class="btn btn-primary">Back to Dashboard</a>
+    </div>
+    
+    <?php if (empty($bookings)): ?>
+        <div class="alert alert-info">
+            You don't have any bookings yet. <a href="<?= $baseUrl ?>/Views/userDashBoard.phtml">Find a charger</a> to get started!
+        </div>
+    <?php else: ?>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Charger Type</th>
+                        <th>Location</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($bookings as $booking): 
+                        $location = $chargePointModel->getLocationDetails($booking['location_id']);
+                        $statusClass = '';
+                        switch ($booking['status']) {
+                            case 'confirmed':
+                                $statusClass = 'text-success';
+                                break;
+                            case 'completed':
+                                $statusClass = 'text-primary';
+                                break;
+                            case 'cancelled':
+                                $statusClass = 'text-danger';
+                                break;
+                            case 'pending':
+                                $statusClass = 'text-warning';
+                                break;
+                        }
+                    ?>
+                        <tr>
+                            <td><?= $booking['id'] ?></td>
+                            <td><?= htmlspecialchars($booking['charger_type']) ?></td>
+                            <td>
+                                <?= htmlspecialchars($location['name']) ?><br>
+                                <small class="text-muted"><?= htmlspecialchars($location['city']) ?>, Block <?= htmlspecialchars($location['block']) ?></small>
+                            </td>
+                            <td><?= date('M j, Y g:i A', strtotime($booking['start_time'])) ?></td>
+                            <td><?= date('M j, Y g:i A', strtotime($booking['end_time'])) ?></td>
+                            <td class="<?= $statusClass ?>">
+                                <?= ucfirst($booking['status']) ?>
+                            </td>
+                            <td>
+                                <?php if ($booking['status'] === 'pending' || $booking['status'] === 'confirmed'): ?>
+                                    <button class="btn btn-sm btn-outline-danger cancel-booking" data-booking-id="<?= $booking['id'] ?>">Cancel</button>
+                                <?php endif; ?>
+                                <a href="<?= $baseUrl ?>/Views/bookingDetails.phtml?booking_id=<?= $booking['id'] ?>" class="btn btn-sm btn-outline-primary">Details</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php endif; ?>
+</div>
+
+<!-- Footer -->
+<?php 
+if (file_exists($footerPath) && is_readable($footerPath)) {
+    include $footerPath;
+}
+?>
+
+<script src="<?= $baseUrl ?>/js/bookingHistory.js"></script>
+</body>
+</html>

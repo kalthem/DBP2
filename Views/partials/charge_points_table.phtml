@@ -1,0 +1,78 @@
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>Location</th>
+                <th>City</th>
+                <th>Charger Type</th>
+                <th>Price/Hour</th>
+                <th>Status</th>
+                <th>Available Days</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (!empty($tableChargePoints)): ?>
+                <?php foreach ($tableChargePoints as $cp): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($cp['location_name'] ?? 'N/A') ?></td>
+                        <td><?= htmlspecialchars($cp['city'] ?? 'N/A') ?></td>
+                        <td><?= htmlspecialchars($cp['charger_type'] ?? 'N/A') ?></td>
+                        <td class="price-column">BD <?= isset($cp['price_per_hour']) ? number_format($cp['price_per_hour'], 2) : '0.00' ?></td>
+                        <td class="status-<?= $cp['status'] ?? '' ?>">
+                            <?= isset($cp['status']) ? ucfirst($cp['status']) : 'N/A' ?>
+                        </td>
+                        <td><?= isset($cp['availability_days']) ? str_replace(',', ', ', $cp['availability_days']) : 'N/A' ?></td>
+                        <td>
+                            <?php if (isset($cp['status']) && $cp['status'] === 'available'): ?>
+                            <form method="POST" class="booking-form">
+                                <input type="hidden" name="charge_point_id" value="<?= $cp['id'] ?? '' ?>">
+                                <input type="hidden" name="user_id" value="<?= $_SESSION['user']['id'] ?? '' ?>">
+                                <input type="hidden" name="price_per_hour" value="<?= $cp['price_per_hour'] ?? 0 ?>">
+                                <input type="hidden" name="location_name" value="<?= htmlspecialchars($cp['location_name'] ?? '') ?>">
+                                <input type="hidden" name="city" value="<?= htmlspecialchars($cp['city'] ?? '') ?>">
+                                <input type="hidden" name="charger_type" value="<?= htmlspecialchars($cp['charger_type'] ?? '') ?>">
+                                
+                                <div class="datetime-inputs mb-2">
+                                    <div class="input-group input-group-sm mb-1">
+                                        <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                                        <input type="datetime-local" 
+                                               name="start_time" 
+                                               class="form-control start-time" 
+                                               required
+                                               min="<?= date('Y-m-d\TH:i') ?>">
+                                    </div>
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                                        <input type="datetime-local" 
+                                               name="end_time" 
+                                               class="form-control end-time" 
+                                               required
+                                               min="<?= date('Y-m-d\TH:i') ?>">
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-sm btn-success w-100 book-now-btn">
+                                    <i class="bi bi-lightning-charge"></i> Book Now
+                                </button>
+                                <div class="booking-error text-danger small mt-1"></div>
+                            </form>
+                            <?php else: ?>
+                                <span class="text-muted">Not available</span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="7" class="text-center py-4">
+                        <div class="text-muted">
+                            <i class="bi bi-exclamation-circle"></i>
+                            No charging points found
+                        </div>
+                    </td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>

@@ -369,3 +369,157 @@ main {
   display: block;
   margin: 0 auto;  
 }
+
+/* General */
+body {
+    font-family: Arial, sans-serif;
+    color: #000 !important;
+    background-color: #f8f9fa;
+}
+
+/* Welcome Title */
+.google-style-title {
+    font-size: 50px;
+    font-weight: bold;
+    color: #000;
+    margin-top: 80px;
+    margin-bottom: 30px;
+}
+
+/* Dashboard Buttons */
+.dashboard-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    margin-bottom: 100px;
+}
+
+.dashboard-buttons .btn {
+    min-width: 150px;
+    text-align: center;
+    padding: 15px 25px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 16px;
+    text-decoration: none;
+    background-color: #179c8b;
+    color: white !important;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-buttons .btn:hover {
+    background-color: #128776;
+}
+
+/* Footer space */
+footer {
+    margin-top: 80px;
+}
+
+/* ===== NEW CHARGE POINTS TABLE STYLES ===== */
+.charge-point-table {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: collapse;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.charge-point-table thead {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.charge-point-table th {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.charge-point-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+    vertical-align: middle;
+}
+
+.charge-point-table tr:hover {
+    background-color: rgba(42, 157, 143, 0.05);
+}
+
+/* Status indicators */
+.status-available {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.status-in_use {
+    color: #ffc107;
+    font-weight: bold;
+}
+
+.status-offline {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* Booking form in table */
+.booking-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.booking-form input[type="datetime-local"] {
+    padding: 6px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Card styling for the table container */
+.card.charge-points-card {
+    border: none;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.card.charge-points-card .card-header {
+    padding: 15px 20px;
+    font-size: 1.2rem;
+}
+
+/* Responsive table */
+@media (max-width: 768px) {
+    .charge-point-table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .booking-form {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .booking-form button {
+        margin-top: 5px;
+    }
+}
+
+/* Table action buttons */
+.btn-book {
+    padding: 6px 12px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* Empty table message */
+.empty-table-message {
+    text-align: center;
+    padding: 30px;
+    color: #6c757d;
+    font-style: italic;
+}
+

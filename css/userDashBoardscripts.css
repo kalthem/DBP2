@@ -1,0 +1,127 @@
+/* =============== Loading States =============== */
+#loadingSpinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    display: none;
+}
+
+.loading {
+    opacity: 0.5;
+    pointer-events: none;
+    position: relative;
+}
+
+.loading::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 10;
+}
+
+.btn .spinner-border {
+    vertical-align: text-top;
+    margin-right: 0.25rem;
+}
+
+/* =============== Filter Section =============== */
+.filter-section {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.filter-row {
+    margin-bottom: 1rem;
+}
+
+/* =============== Table Styles =============== */
+.price-column {
+    font-family: monospace;
+    font-weight: bold;
+    color: var(--primary-color);
+    white-space: nowrap;
+}
+
+/* =============== Booking Form Styles =============== */
+.booking-form {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.booking-form .input-group {
+    width: auto;
+    flex-grow: 1;
+}
+
+.booking-form .form-control {
+    min-width: 150px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.booking-form.was-validated .form-control:invalid {
+    border-color: #dc3545;
+}
+
+.booking-form.was-validated .form-control:valid {
+    border-color: #28a745;
+}
+
+/* =============== Status Indicators =============== */
+.status-available {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.status-in_use {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.status-offline {
+    color: #6c757d;
+    font-weight: bold;
+}
+
+/* =============== Validation Messages =============== */
+.invalid-feedback.booking-feedback,
+.booking-error {
+    display: block;
+    font-size: 0.875em;
+    color: #dc3545;
+    min-height: 1rem;
+}
+
+/* =============== Responsive Adjustments =============== */
+@media (max-width: 768px) {
+    .booking-form {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .filter-row > div {
+        margin-bottom: 10px;
+    }
+    
+    .booking-form .form-control {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .table-responsive {
+        border: 0;
+    }
+}

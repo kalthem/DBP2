@@ -12,10 +12,10 @@ $action = strtolower($_GET['action'] ?? 'home');
 
 switch ($action) {
     case 'about':
-        require $basePath . '/Views/about.phtml';
+        require $basePath . '/Views/About.phtml';
         break;
     case 'howitworks':
-        require $basePath . '/Views/howitworks.phtml';
+        require $basePath . '/Views/HowItWorks.phtml';
         break;
     case 'login':
         require $basePath . '/Views/Login.phtml';
@@ -23,9 +23,13 @@ switch ($action) {
     case 'register':
         require $basePath . '/Views/register.phtml';
         break;
+    case 'dashboard':
+        require $basePath . '/Views/userDashBoard.phtml';
+        break;
     case 'home':
     default:
         require $basePath . '/Views/index.phtml';
         break;
+    
+    
 }
-

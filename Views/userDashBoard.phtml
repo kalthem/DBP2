@@ -1,10 +1,169 @@
+<?php
+// MUST be first - no whitespace before!
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+
+// Define base paths
+$baseUrl = 'http://20.126.5.244/~u202103011/BorrowMyCharger';
+$basePath = '/home/u202103011/public_html/BorrowMyCharger';
+
+// Secure session check
+if (empty($_SESSION['user']['id'])) {
+    header("Location: $baseUrl/index.php?action=login");
+    exit;
+}
+
+// Get username safely
+$username = !empty($_SESSION['user']['name']) ? htmlspecialchars($_SESSION['user']['name']) : 'User';
+
+// Get charge points from database
+require_once $basePath . '/Models/ChargePoint.php';
+require_once $basePath . '/db_connect.php';
+
+$database = Database::getInstance();
+$pdo = $database->getdbConnection();
+$chargePointModel = new ChargePoint($pdo);
+
+// Get filter parameters
+$minPrice = isset($_GET['min_price']) ? (float)$_GET['min_price'] : null;
+$maxPrice = isset($_GET['max_price']) ? (float)$_GET['max_price'] : null;
+$statusFilter = isset($_GET['status']) ? $_GET['status'] : null;
+$cityFilter = isset($_GET['city']) ? $_GET['city'] : null;
+
+// Get filtered charge points
+$chargePoints = $chargePointModel->getFilteredChargePoints($minPrice, $maxPrice, $statusFilter, $cityFilter);
+
+// Get unique cities for filter dropdown
+$cities = $chargePointModel->getAllCities();
+
+// Define header/footer paths
+$headerPath = __DIR__ . '/template/header.phtml';
+$footerPath = __DIR__ . '/template/footer.phtml';
+
+// Set headers before any output
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
+    <title>Welcome, <?= $username ?> - Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="base-url" content="<?= $baseUrl ?>">
+    <link rel="stylesheet" href="<?= $baseUrl ?>/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= $baseUrl ?>/css/my-style.css">
+    <link rel="stylesheet" href="<?= $baseUrl ?>/css/userDashBoardscripts.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
 </head>
 <body>
-    <h1>This is the User dashboard</h1>
+
+<!-- Header -->
+<?php 
+if (file_exists($headerPath) && is_readable($headerPath)) {
+    include $headerPath;
+}
+?>
+
+<div id="loadingSpinner" class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+</div>
+
+<div class="container">
+    <h2 class="text-center my-4">Welcome, <?= $username ?></h2>
+    
+    <div class="d-flex justify-content-between mb-4">
+        <a href="<?= $baseUrl ?>/Views/mapView.phtml" class="btn btn-primary">🗺️ View on Map</a>
+        <a href="<?= $baseUrl ?>/Views/bookingHistory.phtml" class="btn btn-secondary">📜 Booking History</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Available Charging Points</h4>
+            <button class="btn btn-sm btn-light" data-bs-toggle="collapse" data-bs-target="#filterCollapse">
+                <i class="bi bi-funnel"></i> Filters
+            </button>
+        </div>
+        
+        <!-- Filter Section -->
+        <div class="collapse" id="filterCollapse">
+            <div class="filter-section p-3">
+                <form id="filterForm">
+                    <div class="row filter-row">
+                        <div class="col-md-3">
+                            <label for="min_price" class="form-label">Min Price (BD)</label>
+                            <input type="number" step="0.01" class="form-control" id="min_price" name="min_price" 
+                                   value="<?= isset($minPrice) ? htmlspecialchars($minPrice) : '' ?>" placeholder="0.00">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="max_price" class="form-label">Max Price (BD)</label>
+                            <input type="number" step="0.01" class="form-control" id="max_price" name="max_price" 
+                                   value="<?= isset($maxPrice) ? htmlspecialchars($maxPrice) : '' ?>" placeholder="Any">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-select" id="status" name="status">
+                                <option value="">All Statuses</option>
+                                <option value="available" <?= isset($statusFilter) && $statusFilter === 'available' ? 'selected' : '' ?>>Available</option>
+                                <option value="in_use" <?= isset($statusFilter) && $statusFilter === 'in_use' ? 'selected' : '' ?>>In Use</option>
+                                <option value="offline" <?= isset($statusFilter) && $statusFilter === 'offline' ? 'selected' : '' ?>>Offline</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="city" class="form-label">City</label>
+                            <select class="form-select" id="city" name="city">
+                                <option value="">All Cities</option>
+                                <?php foreach ($cities as $city): ?>
+                                    <option value="<?= htmlspecialchars($city) ?>" 
+                                        <?= isset($cityFilter) && $cityFilter === $city ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($city) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12 text-end">
+                            <button type="submit" class="btn btn-primary me-2">
+                                <i class="bi bi-funnel"></i> Apply Filters
+                            </button>
+                            <button type="button" id="clearFilters" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle"></i> Clear Filters
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Table Container -->
+        <div class="card-body">
+            <div id="chargePointsTableContainer">
+                <?php 
+                $tablePath = __DIR__ . '/partials/charge_points_table.phtml';
+                if (file_exists($tablePath) && is_readable($tablePath)) {
+                    // Pass required variables to the partial
+                    $tableChargePoints = $chargePoints;
+                    $tableBaseUrl = $baseUrl;
+                    include $tablePath;
+                } else {
+                    echo '<div class="alert alert-danger">Error loading charge points table. Please try again later.</div>';
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<?php 
+if (file_exists($footerPath) && is_readable($footerPath)) {
+    include $footerPath;
+}
+?>
+
+<script src="<?= $baseUrl ?>/js/userDashBoardScripts.js"></script>
 </body>
 </html>
