@@ -23,6 +23,19 @@ switch ($action) {
     case 'register':
         require $basePath . '/Views/register.phtml';
         break;
+     case 'dashboard':
+        require $basePath . '/Controllers/AdminController.php';
+        break;
+    case 'manageusers':
+        require $basePath . '/Controllers/ManageUsersController.php';
+        break;
+    case 'reports':
+        require $basePath . '/Controllers/AdminReportsController.php';
+        break;
+     case 'managechargers':
+        require $basePath . '/Controllers/ManageChargePointsController.php';
+        break;
+    
     case 'home':
     default:
         require $basePath . '/Views/index.phtml';

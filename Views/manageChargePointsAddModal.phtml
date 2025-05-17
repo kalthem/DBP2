@@ -1,0 +1,58 @@
+<div class="modal fade" id="addModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form id="addForm" method="POST" enctype="multipart/form-data" novalidate>
+                <input type="hidden" name="action" value="add">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Charge Point</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="addError" class="alert alert-danger d-none"></div>
+                    <div class="mb-3">
+                        <label for="addName" class="form-label">Name</label>
+                        <input type="text" name="name" id="addName" class="form-control" required maxlength="100">
+                    </div>
+                    <div class="mb-3">
+                        <label for="addLocation" class="form-label">Location</label>
+                        <select name="location_id" id="addLocation" class="form-select" required>
+                            <option value="">Select location</option>
+                            <?php foreach ($locations as $loc): ?>
+                                <option value="<?= $loc['id'] ?>"><?= htmlspecialchars($loc['name']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col">
+                            <label for="addLatitude" class="form-label">Latitude</label>
+                            <input type="text" name="latitude" id="addLatitude" class="form-control" required>
+                        </div>
+                        <div class="col">
+                            <label for="addLongitude" class="form-label">Longitude</label>
+                            <input type="text" name="longitude" id="addLongitude" class="form-control" required>
+                        </div>
+                        <div class="col-auto d-flex align-items-end">
+                            <button type="button" class="btn btn-outline-info" id="addMapBtn">Pick on Map</button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addStatus" class="form-label">Status</label>
+                        <select name="status" id="addStatus" class="form-select" required>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addImage" class="form-label">Image</label>
+                        <input type="file" name="image" id="addImage" class="form-control">
+                        <div id="addImagePreview" class="mt-2"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Charge Point</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

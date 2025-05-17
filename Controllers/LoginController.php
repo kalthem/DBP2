@@ -47,11 +47,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'role' => $user['role'],
                     'status' => $user['status']
                 ];
-
+                $_SESSION['user_id'] = $user['id']; 
                 // PHP 7+ compatible version
                 switch ($user['role']) {
                     case 'admin':
-                        $dashboard = $baseUrl . '/Views/adminDashBoard.phtml';
+                        $dashboard = $baseUrl . "/index.php?action=dashboard";
                         break;
                     case 'homeowner':
                         $dashboard = $baseUrl . '/Views/homeOwnerDashBoard.phtml';
