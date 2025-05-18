@@ -1,7 +1,30 @@
 document.addEventListener("DOMContentLoaded", function () {
-    loadChargePoint();
-    loadBookings();
+    const contentDiv = document.getElementById("dashboardContent");
 
+    function loadSection(section) {
+        fetch(`Controllers/loadHomeownerDashboard.php?section=${section}`)
+            .then(res => res.text())
+            .then(html => {
+                contentDiv.innerHTML = html;
+            })
+            .catch(err => {
+                contentDiv.innerHTML = "<div class='alert alert-danger'>Failed to load content.</div>";
+                console.error(err);
+            });
+    }
+
+    document.getElementById("btnManageChargePoint").addEventListener("click", () => {
+        loadSection("chargepoint");
+    });
+
+    document.getElementById("btnViewBookingRequests").addEventListener("click", () => {
+        loadSection("bookings");
+    });
+
+    // Default section
+    loadSection("chargepoint");
+
+    // Delegate click for approve/decline
     document.addEventListener("click", function (e) {
         if (e.target.classList.contains("approve-btn") || e.target.classList.contains("decline-btn")) {
             const bookingId = e.target.dataset.id;
@@ -9,19 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             fetch(`Controllers/updateBookingStatus.php?id=${bookingId}&status=${status}`)
                 .then(res => res.text())
-                .then(() => loadBookings());
+                .then(() => loadSection("bookings"));
         }
     });
 });
-
-function loadChargePoint() {
-    fetch("Controllers/loadHomeownerDashboard.php?section=chargepoint")
-        .then(res => res.text())
-        .then(html => document.getElementById("chargePointSection").innerHTML = html);
-}
-
-function loadBookings() {
-    fetch("Controllers/loadHomeownerDashboard.php?section=bookings")
-        .then(res => res.text())
-        .then(html => document.getElementById("bookingSection").innerHTML = html);
-}

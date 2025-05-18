@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } elseif ($user['role'] === 'homeowner' && $user['status'] === 'pending') {
                 $loginError = "Your homeowner account is pending approval.";
             } else {
-                // Store session info
+                // ✅ Store session info
                 $_SESSION['user'] = [
                     'id' => $user['id'],
                     'username' => $user['username'],
@@ -48,6 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'status' => $user['status']
                 ];
                 $_SESSION['user_id'] = $user['id'];
+                $_SESSION['role'] = $user['role']; // ✅ FIXED LINE: Needed for Homeowner Dashboard access
 
                 // Redirect to appropriate dashboard
                 switch ($user['role']) {
@@ -55,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $dashboard = $baseUrl . "/index.php?action=admindashboard";
                         break;
                     case 'homeowner':
-                        $dashboard = $baseUrl . "/index.php?action=homeownerdashboard"; // ✅ FIXED spelling
+                        $dashboard = $baseUrl . "/index.php?action=homeownerdashboard";
                         break;
                     case 'user':
                         $dashboard = $baseUrl . "/index.php?action=userdashboard";

@@ -1,0 +1,62 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+$baseUrl = 'http://20.126.5.244/~u202103011/BorrowMyCharger';
+include __DIR__ . '/template/header.phtml';
+
+require_once __DIR__ . '/../db_connect.php';
+$pdo = Database::getInstance()->getdbConnection();
+$userId = $_SESSION['user_id'];
+
+// Fetch current charge point
+$stmt = $pdo->prepare("SELECT * FROM charge_point WHERE owner_id = ?");
+$stmt->execute([$userId]);
+$cp = $stmt->fetch();
+
+if (!$cp) {
+    echo "<div class='container mt-5 alert alert-warning'>You do not have a charge point to edit.</div>";
+    include __DIR__ . '/template/footer.phtml';
+    exit;
+}
+?>
+
+<div class="container mt-5">
+  <h3>Edit Your Charge Point</h3>
+  <form action="Controllers/updateChargePoint.php" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="id" value="<?= $cp['id'] ?>">
+
+    <div class="mb-3">
+      <label>Charger Type</label>
+      <input type="text" name="charger_type" value="<?= htmlspecialchars($cp['charger_type']) ?>" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label>Status</label>
+      <select name="status" class="form-control" required>
+        <option value="available" <?= $cp['status'] === 'available' ? 'selected' : '' ?>>Available</option>
+        <option value="in_use" <?= $cp['status'] === 'in_use' ? 'selected' : '' ?>>In Use</option>
+        <option value="offline" <?= $cp['status'] === 'offline' ? 'selected' : '' ?>>Offline</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label>Available Days</label>
+      <input type="text" name="availability_days" value="<?= htmlspecialchars($cp['availability_days']) ?>" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label>Price Per Hour (BHD)</label>
+      <input type="number" step="0.01" name="price_per_hour" value="<?= htmlspecialchars($cp['price_per_hour']) ?>" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label>Upload New Image (optional)</label>
+      <input type="file" name="image" class="form-control">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+  </form>
+</div>
+
+<?php include __DIR__ . '/template/footer.phtml'; ?>

@@ -1,38 +1,26 @@
 <?php
-session_start();
-$baseUrl = 'http://20.126.5.244/~u202103011/BorrowMyCharger';
-
-if (!isset($_SESSION['user']['id']) || $_SESSION['user']['role'] !== 'homeowner') {
-    header("Location: index.php?action=login");
-    exit;
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
+$baseUrl = 'http://20.126.5.244/~u202103011/BorrowMyCharger';
+include __DIR__ . '/template/header.phtml'; // Adjust path if needed
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Homeowner Dashboard</title>
-    <link rel="stylesheet" href="<?= $baseUrl ?>/css/bootstrap.min.css">
-    <link rel="stylesheet" href="<?= $baseUrl ?>/css/homeOwner.css">
-    <script src="<?= $baseUrl ?>/js/homeOwner.js" defer></script>
-</head>
-<body>
+<link rel="stylesheet" href="<?= $baseUrl ?>/css/homeOwner.css">
 
-<?php include __DIR__ . '/template/header.phtml'; ?>
-
-<div class="container mt-5">
+<div class="container py-5">
     <h2 class="text-center mb-4">Homeowner Dashboard</h2>
-    
-    <div id="chargePointSection" class="mb-5">
-        <!-- Loaded via AJAX -->
+
+    <div class="dashboard-buttons mb-4 text-center">
+        <button id="btnManageChargePoint" class="btn btn-primary mx-2">Manage My Charge Point</button>
+        <button id="btnViewBookingRequests" class="btn btn-secondary mx-2">Booking Requests</button>
     </div>
 
-    <div id="bookingSection">
-        <!-- Loaded via AJAX -->
+    <div id="dashboardContent" class="mt-4">
+        <!-- Dynamic content will load here -->
     </div>
 </div>
 
-<?php include __DIR__ . '/template/footer.phtml'; ?>
-</body>
-</html>
+<script src="<?= $baseUrl ?>/js/homeOwner.js" defer></script>
+
+<?php include __DIR__ . '/template/footer.phtml'; // Adjust path if needed ?>

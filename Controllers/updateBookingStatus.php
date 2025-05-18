@@ -1,15 +1,24 @@
 <?php
-session_start();
 require_once __DIR__ . '/../db_connect.php';
+session_start();
 
-if (!isset($_SESSION['user']['id']) || $_SESSION['user']['role'] !== 'homeowner') exit;
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'homeowner') {
+    http_response_code(403);
+    echo "Access denied.";
+    exit;
+}
+
+$bookingId = $_GET['id'] ?? null;
+$status = $_GET['status'] ?? null;
+
+if (!$bookingId || !in_array($status, ['confirmed', 'declined'])) {
+    http_response_code(400);
+    echo "Invalid request.";
+    exit;
+}
 
 $pdo = Database::getInstance()->getdbConnection();
-$id = $_GET['id'] ?? 0;
-$status = $_GET['status'] ?? '';
+$stmt = $pdo->prepare("UPDATE booking SET status = ?, updated_at = NOW() WHERE id = ?");
+$stmt->execute([$status, $bookingId]);
 
-if (!in_array($status, ['confirmed', 'declined'])) exit;
-
-$stmt = $pdo->prepare("UPDATE booking SET status = ?, updated_at = NOW() WHERE id = ? AND charge_point_id IN (SELECT id FROM charge_point WHERE owner_id = ?)");
-$stmt->execute([$status, $id, $_SESSION['user']['id']]);
-echo "updated";
+echo "Status updated.";

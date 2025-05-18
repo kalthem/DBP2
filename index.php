@@ -27,7 +27,8 @@ $viewRoutes = [
     'bookingsuccess' => 'booking_success.phtml',
     'mybookings' => 'my_bookings.phtml',
     'mapview' => 'mapView.phtml',
-    'homeownerdashboard' => 'homeOwnerDashBoard.phtml', 
+    'homeownerdashboard' => 'homeOwnerDashBoard.phtml',  // ✅ Homeowner Dashboard
+    'managechargepoint' => 'manageChargePointHomeOwner.phtml', // ✅ Clean final view for management
     'home' => 'index.phtml'
 ];
 
@@ -37,10 +38,11 @@ $controllerRoutes = [
     'manageusers' => 'ManageUsersController.php',
     'managechargers' => 'ManageChargePointsController.php',
     'reports' => 'AdminReportsController.php',
-    'updatebookingstatus' => 'updateBookingStatus.php',      // optional
-    'loadhomeownerbookings' => 'loadHomeownerBookings.php',  // optional
-    'loadchargepoint' => 'loadChargePoint.php',              // optional
-    'updatechargepoint' => 'updateChargePoint.php'           // optional
+    'updatebookingstatus' => 'updateBookingStatus.php',
+    'loadhomeownerbookings' => 'loadHomeownerBookings.php',
+    'loadchargepoint' => 'loadChargePoint.php',
+    'updatechargepoint' => 'updateChargePoint.php',
+    'homeownermanagecharger' => 'homeownermanagecharger.php' // ✅ Controller to handle form logic
 ];
 
 // Get requested action
