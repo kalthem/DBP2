@@ -1,15 +1,78 @@
 <?php
-$baseUrl = 'http://20.126.5.244/~u202200053/BorrowMyCharger';
+// Secure session check
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+
+$baseUrl = 'http://20.126.5.244/~u202103011/BorrowMyCharger';
+
+// Validate admin session
+if (!isset($_SESSION['user']['id']) || $_SESSION['user']['role'] !== 'admin') {
+    header("Location: $baseUrl/index.php?action=login");
+    exit();
+}
+
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
+
+$adminName = htmlspecialchars($_SESSION['user']['name'] ?? 'Admin');
+
+// Define paths for header and footer templates
+$headerPath = __DIR__ . '/template/header.phtml';
+$footerPath = __DIR__ . '/template/footer.phtml';
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard | Admin</title>
-    <!-- You can add CSS links here using $baseUrl if needed -->
-    <!-- <link rel="stylesheet" href="<?= $baseUrl ?>/css/dashboard.css"> -->
+    <title>Admin Dashboard - Borrow My Charger</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="<?= $baseUrl ?>/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= $baseUrl ?>/css/admin-style.css">
 </head>
 <body>
-    <h1>This is the Admin dashboard</h1>
+    <!-- Header -->
+    <?php if (file_exists($headerPath)) require $headerPath; ?>
+
+    <main class="container text-center my-5">
+        <div class="welcome-box">
+            <h1>Welcome, <?= $adminName ?>!</h1>
+            <p>Your admin dashboard for managing Borrow My Charger.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card shadow-sm bg-primary-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Manage Users</h5>
+                        <p class="card-text">Approve, suspend, or delete user accounts.</p>
+                        <a href="<?= $baseUrl ?>/index.php?action=manageusers" class="btn btn-light">Go</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm bg-secondary-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Manage Chargers</h5>
+                        <p class="card-text">Add, edit, or delete charge points.</p>
+                        <a href="<?= $baseUrl ?>/index.php?action=managechargers" class="btn btn-light">Go</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm bg-danger-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Generate Reports</h5>
+                        <p class="card-text">View system usage and performance reports.</p>
+                        <a href="<?= $baseUrl ?>/index.php?action=reports" class="btn btn-light">Go</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <?php if (file_exists($footerPath)) require $footerPath; ?>
 </body>
 </html>

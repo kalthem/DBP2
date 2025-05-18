@@ -4,44 +4,71 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Absolute base path to your project
 $basePath = '/home/u202103011/public_html/BorrowMyCharger';
 $viewsPath = $basePath . '/Views';
+$controllersPath = $basePath . '/Controllers';
 
 // Handle logout
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     session_destroy();
-    header("Location: $baseUrl/index.php?action=home");
+    header("Location: index.php?action=home");
     exit;
 }
 
-// Allowed actions and their corresponding view files
-$routes = [
+// Define view routes
+$viewRoutes = [
     'about' => 'About.phtml',
     'howitworks' => 'HowItWorks.phtml',
     'login' => 'Login.phtml',
     'register' => 'register.phtml',
-    'dashboard' => 'userDashBoard.phtml',
+    'userdashboard' => 'userDashBoard.phtml',
     'bookchargepoint' => 'bookChargePoint.phtml',
     'bookingconfirmation' => 'bookingConfirmation.phtml',
     'bookingsuccess' => 'booking_success.phtml',
     'mybookings' => 'my_bookings.phtml',
     'mapview' => 'mapView.phtml',
+    'homeownerdashboard' => 'homeOwnerDashBoard.phtml', 
     'home' => 'index.phtml'
 ];
 
-// Get route from URL and default to 'home'
+// Define controller routes
+$controllerRoutes = [
+    'admindashboard' => 'AdminController.php',
+    'manageusers' => 'ManageUsersController.php',
+    'managechargers' => 'ManageChargePointsController.php',
+    'reports' => 'AdminReportsController.php',
+    'updatebookingstatus' => 'updateBookingStatus.php',      // optional
+    'loadhomeownerbookings' => 'loadHomeownerBookings.php',  // optional
+    'loadchargepoint' => 'loadChargePoint.php',              // optional
+    'updatechargepoint' => 'updateChargePoint.php'           // optional
+];
+
+// Get requested action
 $action = strtolower($_GET['action'] ?? 'home');
 
-// Load the appropriate view
-if (array_key_exists($action, $routes)) {
-    $viewFile = $viewsPath . '/' . $routes[$action];
-    if (file_exists($viewFile)) {
-        require $viewFile;
+// First check if it’s a controller route
+if (array_key_exists($action, $controllerRoutes)) {
+    $file = $controllersPath . '/' . $controllerRoutes[$action];
+    if (file_exists($file)) {
+        require $file;
+        exit;
     } else {
-        echo "<h3 style='color: red;'>Error: View file for '$action' not found.</h3>";
+        echo "<h3 style='color: red;'>Error: Controller for '$action' not found.</h3>";
+        exit;
     }
-} else {
-    echo "<h3 style='color: red;'>Error: Invalid page action '$action'.</h3>";
 }
 
+// Otherwise, check if it’s a view route
+if (array_key_exists($action, $viewRoutes)) {
+    $file = $viewsPath . '/' . $viewRoutes[$action];
+    if (file_exists($file)) {
+        require $file;
+        exit;
+    } else {
+        echo "<h3 style='color: red;'>Error: View for '$action' not found.</h3>";
+        exit;
+    }
+}
+
+// If nothing matches
+echo "<h3 style='color: red;'>Error: Invalid action '$action'.</h3>";

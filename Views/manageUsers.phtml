@@ -1,0 +1,104 @@
+<?php
+if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+$baseUrl = 'http://20.126.5.244/~u202103011/BorrowMyCharger';
+if (!isset($_SESSION['user']['id']) || $_SESSION['user']['role'] !== 'admin') {
+    header("Location: $baseUrl/index.php?action=login");
+    exit();
+}
+require_once __DIR__ . '/../Controllers/ManageUsersController.php';
+$controller = new ManageUsersModel();
+$filter = $_GET['filter'] ?? 'all';
+$page = $_GET['page'] ?? 1;
+$data = $controller->getUsers($filter, $page);
+$users = $data['users'];
+$totalPages = $data['totalPages'];
+$stats = $controller->getUserStats();
+$headerPath = __DIR__ . '/template/header.phtml';
+$footerPath = __DIR__ . '/template/footer.phtml';
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Users</title>
+    <link rel="stylesheet" href="<?= $baseUrl ?>/css/bootstrap.min.css">
+    <script src="<?= $baseUrl ?>/js/manageUsers.js" defer></script>
+</head>
+<body>
+    <?php if (file_exists($headerPath)) require $headerPath; ?>
+    <main class="container">
+        <h1>Manage Users</h1>
+        <!-- STATS GRID -->
+        <div class="row g-2 mb-3" id="userStatsRow">
+            <div class="col-6 col-md-3">
+                <button class="btn btn-primary w-100">
+                    <div style="font-size:1.3rem"><?= $stats['total'] ?></div>
+                    <div style="font-size:.9rem">Total Users</div>
+                </button>
+            </div>
+            <div class="col-6 col-md-3">
+                <button class="btn btn-success w-100">
+                    <div style="font-size:1.3rem"><?= $stats['approved'] ?></div>
+                    <div style="font-size:.9rem">Approved</div>
+                </button>
+            </div>
+            <div class="col-6 col-md-3">
+                <button class="btn btn-warning w-100">
+                    <div style="font-size:1.3rem"><?= $stats['suspended'] ?></div>
+                    <div style="font-size:.9rem">Suspended</div>
+                </button>
+            </div>
+            <div class="col-6 col-md-3">
+                <button class="btn btn-secondary w-100">
+                    <div style="font-size:1.3rem"><?= $stats['pending'] ?></div>
+                    <div style="font-size:.9rem">Pending</div>
+                </button>
+            </div>
+        </div>
+        <!-- END STATS GRID -->
+        <div class="my-3 d-flex justify-content-between">
+            <input type="text" id="searchInput" class="form-control w-50" placeholder="Search users">
+            <select id="filterSelect" class="form-select w-25">
+                <option value="all" <?= $filter === 'all' ? 'selected' : '' ?>>All</option>
+                <option value="approved" <?= $filter === 'approved' ? 'selected' : '' ?>>Approved</option>
+                <option value="suspended" <?= $filter === 'suspended' ? 'selected' : '' ?>>Suspended</option>
+                <option value="pending" <?= $filter === 'pending' ? 'selected' : '' ?>>Pending</option>
+            </select>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th><th>Name</th><th>Username</th><th>Role</th><th>Status</th><th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="userTableBody">
+                <?php foreach ($users as $user): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($user['id']) ?></td>
+                        <td><?= htmlspecialchars($user['name']) ?></td>
+                        <td><?= htmlspecialchars($user['username']) ?></td>
+                        <td><?= htmlspecialchars($user['role']) ?></td>
+                        <td><?= htmlspecialchars($user['status']) ?></td>
+                        <td>
+                            <button class="btn btn-success btn-sm action-btn" data-id="<?= $user['id'] ?>" data-action="approve">Approve</button>
+                            <button class="btn btn-warning btn-sm action-btn" data-id="<?= $user['id'] ?>" data-action="suspend">Suspend</button>
+                            <button class="btn btn-danger btn-sm action-btn" data-id="<?= $user['id'] ?>" data-action="delete">Delete</button>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <!-- Pagination -->
+        <nav>
+            <ul class="pagination">
+                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                    <li class="page-item <?= $page == $i ? 'active' : '' ?>">
+                        <a class="page-link pagination-link" href="#" data-page="<?= $i ?>" data-filter="<?= $filter ?>"><?= $i ?></a>
+                    </li>
+                <?php endfor; ?>
+            </ul>
+        </nav>
+    </main>
+    <?php if (file_exists($footerPath)) require $footerPath; ?>
+</body>
+</html>

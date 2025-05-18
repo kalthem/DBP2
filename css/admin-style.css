@@ -1,0 +1,344 @@
+/* ===== Admin Dashboard Styles ===== */
+
+body {
+    background-color: var(--light-color);
+    color: var(--dark-color);
+}
+
+/* Welcome Box */
+.welcome-box {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.welcome-box h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.welcome-box p {
+    font-size: 1.2rem;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.card-body {
+    padding: 25px;
+}
+
+.card-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.card-text {
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+/* Buttons */
+.btn-light {
+    background-color: white;
+    color: var(--primary-color);
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.btn-light:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Card Background Gradients */
+.bg-primary-card {
+    background: linear-gradient(135deg, #2A9D8F, #1E8076);
+    color: white;
+}
+
+.bg-secondary-card {
+    background: linear-gradient(135deg, #E76F51, #C65A43);
+    color: white;
+}
+
+.bg-danger-card {
+    background: linear-gradient(135deg, #dc3545, #b42b3a);
+    color: white;
+}
+
+
+/* Additional Styling for Manage Users */
+#searchInput {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid var(--primary-color);
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    margin-top: 20px;
+}
+
+.table {
+    margin-top: 20px;
+}
+
+.btn {
+    margin-right: 5px;
+}
+
+/* General Page Styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    color: #343a40;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+}
+/* Stats Section */
+#chargePointStatsRow {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+#chargePointStatsRow .col-3 {
+    background: #28a745;
+    color: #ffffff;
+    padding: 20px;
+    border-radius: 6px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Form Styling */
+form {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    margin-bottom: 30px;
+}
+
+form .form-control, form .form-select {
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 10px;
+    font-size: 1rem;
+}
+
+form .form-control:focus, form .form-select:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+}
+
+form button {
+    background-color: #28a745;
+    color: #ffffff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #218838;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table th, table td {
+    border: 1px solid #dee2e6;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.95rem;
+}
+
+table th {
+    background-color: #343a40;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+table tr:hover {
+    background-color: #e9ecef;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.action-buttons button {
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    color: #ffffff;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.action-buttons .edit-btn {
+    background-color: #ffc107;
+}
+
+.action-buttons .edit-btn:hover {
+    background-color: #e0a800;
+}
+
+.action-buttons .delete-btn {
+    background-color: #dc3545;
+}
+
+.action-buttons .delete-btn:hover {
+    background-color: #c82333;
+}
+
+/* Pagination Styling */
+#chargePointsPagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#chargePointsPagination a {
+    margin: 0 5px;
+    padding: 8px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    color: #343a40;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+#chargePointsPagination a.active {
+    background-color: #28a745;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+#chargePointsPagination a:hover {
+    background-color: #e9ecef;
+}
+
+/* Dropdown Suggestions (for AJAX Search Fields) */
+.dropdown-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.dropdown-item {
+    padding: 10px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #343a40;
+}
+
+.dropdown-item:hover {
+    background-color: #e9ecef;
+}
+
+/* Ensure the map takes full modal height and is visually distinct */
+#leafletMap {
+    width: 100%;
+    height: 350px; /* or set as needed, e.g. 100% for modal body */
+    min-height: 300px;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    margin-bottom: 10px;
+}
+
+/* Prevent map tiles from overflowing modal on smaller screens 
+@media (max-width: 600px) {
+    #leafletMap {
+        height: 200px;
+        min-height: 150px;
+    }
+}
+
+ Optional: Style for marker popup or custom marker 
+.leaflet-popup-content {
+    font-size: 1rem;
+    color: #212529;
+}
+
+.leaflet-container {
+    font-family: inherit !important;
+    background: #f8f9fa !important;
+    border-radius: 0.375rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+ Make attribution less prominent in admin view 
+.leaflet-control-attribution {
+    font-size: 0.75rem !important;
+    color: #888 !important;
+}
+
+ If you want to hide the zoom controls (optional) 
+.leaflet-control-zoom {
+    display: none !important;
+}*/
+
+#map-popup {
+  width: 100%;
+  height: 400px;
+  min-height: 300px;
+  max-height: 450px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+.leaflet-container {
+  border-radius: 8px;
+}

@@ -1,6 +1,24 @@
 <?php
 $baseUrl = 'http://20.126.5.244/~u202103011/BorrowMyCharger';
 $currentAction = strtolower($_GET['action'] ?? 'home');
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$loggedIn = isset($_SESSION['user']);
+$role = $loggedIn ? $_SESSION['user']['role'] : null;
+
+$dashboardLink = '';
+
+// Determine the correct dashboard link
+if ($role === 'admin') {
+    $dashboardLink = 'admindashboard';
+} elseif ($role === 'homeowner') {
+    $dashboardLink = 'homeownerdashboard';
+} elseif ($role === 'user') {
+    $dashboardLink = 'userdashboard';
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +32,7 @@ $currentAction = strtolower($_GET['action'] ?? 'home');
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- Font Awesome (for social icons) -->
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
@@ -47,10 +65,20 @@ $currentAction = strtolower($_GET['action'] ?? 'home');
                 </ul>
 
                 <div class="d-flex">
-                    <a href="<?= $baseUrl ?>/index.php?action=login" class="btn btn-secondary me-2">Login</a>
-                    <a href="<?= $baseUrl ?>/index.php?action=register" class="btn btn-primary">Register</a>
+                    <?php if ($loggedIn): ?>
+                        <a href="<?= $baseUrl ?>/index.php?action=<?= $dashboardLink ?>" class="btn btn-outline-primary me-2">
+                            Dashboard
+                        </a>
+                        <a href="<?= $baseUrl ?>/index.php?action=logout" class="btn btn-danger">
+                            Logout
+                        </a>
+                    <?php else: ?>
+                        <a href="<?= $baseUrl ?>/index.php?action=login" class="btn btn-secondary me-2">Login</a>
+                        <a href="<?= $baseUrl ?>/index.php?action=register" class="btn btn-primary">Register</a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </nav>
-    <div style="padding-top: 40px"></div> <!-- Adds space below fixed navbar -->
+
+    <div style="padding-top: 60px"></div> <!-- Add spacing below fixed navbar -->

@@ -1,0 +1,27 @@
+#chargePointSection, #bookingSection {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.charge-box {
+    text-align: center;
+    padding: 40px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.btn {
+    margin: 5px;
+}
+
+.approve-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.decline-btn {
+    background-color: #dc3545;
+    color: white;
+}

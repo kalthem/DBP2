@@ -1,0 +1,268 @@
+<?php
+$baseUrl = 'http://20.126.5.244/~u202103011/BorrowMyCharger';
+if (file_exists(__DIR__ . '/template/header.phtml')) require __DIR__ . '/template/header.phtml';
+?>
+<main class="container-fluid mt-4">
+    <?php if (!empty($_SESSION['error'])): ?>
+        <div class="alert alert-danger alert-dismissible fade show">
+            <?= htmlspecialchars($_SESSION['error']) ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <?php unset($_SESSION['error']); endif; ?>
+    <?php if (!empty($_SESSION['success'])): ?>
+        <div class="alert alert-success alert-dismissible fade show">
+            <?= htmlspecialchars($_SESSION['success']) ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <?php unset($_SESSION['success']); endif; ?>
+    <div class="card shadow">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="mb-0"><?= $isAdmin ? 'System Charge Points' : 'My Charge Points' ?></h3>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal" style="min-width:120px;">
+                <i class="bi bi-plus-circle"></i> Add New
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Location</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Availability</th>
+                            <th>Price/Hour</th>
+                            <th>Image</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($chargePoints as $cp): ?>
+                        <tr data-id="<?= $cp['id'] ?>"
+                            data-location="<?= $cp['location_id'] ?>"
+                            data-type="<?= htmlspecialchars($cp['charger_type']) ?>"
+                            data-status="<?= $cp['status'] ?>"
+                            data-days="<?= htmlspecialchars($cp['availability_days']) ?>"
+                            data-lat="<?= $cp['latitude'] ?? '' ?>"
+                            data-lng="<?= $cp['longitude'] ?? '' ?>"
+                            data-price="<?= $cp['price_per_hour'] ?>">
+                            <td><?= $cp['id'] ?></td>
+                            <td><?= htmlspecialchars($cp['location_name']) ?></td>
+                            <td><?= htmlspecialchars($cp['charger_type']) ?></td>
+                            <td>
+                                <span class="badge bg-<?php
+                                    switch ($cp['status']) {
+                                        case 'available': echo 'success'; break;
+                                        case 'in_use': echo 'warning'; break;
+                                        default: echo 'danger';
+                                    }
+                                ?>">
+                                    <?= ucfirst($cp['status']) ?>
+                                </span>
+                            </td>
+                            <td><?= str_replace(',', ', ', $cp['availability_days']) ?></td>
+                            <td><?= number_format($cp['price_per_hour'], 2) ?> BHD</td>
+                            <td>
+                                <?php if (!empty($cp['image_url'])): ?>
+                                    <img src="<?= $baseUrl . '/' . htmlspecialchars($cp['image_url']) ?>"
+                                         class="img-thumbnail"
+                                         alt="Charge Point Image"
+                                         style="max-width: 100px; height: auto;">
+                                <?php else: ?>
+                                    <span class="text-muted">No Image</span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <button type="button"
+                                        class="btn btn-warning action-btn edit-btn"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editModal">
+                                        Edit
+                                    </button>
+                                    <form method="POST" class="d-inline m-0 p-0">
+                                        <input type="hidden" name="action" value="delete">
+                                        <input type="hidden" name="id" value="<?= $cp['id'] ?>">
+                                        <button type="submit"
+                                                class="btn btn-danger action-btn"
+                                                onclick="return confirm('Permanently delete this charge point?')">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <?php if ($totalPages > 1): ?>
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center mt-4">
+                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                    <li class="page-item <?= $i == $currentPage ? 'active' : '' ?>">
+                        <a class="page-link" href="/managechargepoints?page=<?= $i ?>"><?= $i ?></a>
+                    </li>
+                    <?php endfor; ?>
+                </ul>
+            </nav>
+            <?php endif; ?>
+        </div>
+    </div>
+</main>
+<!-- Add Modal -->
+<div class="modal fade" id="addModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" enctype="multipart/form-data" id="addForm">
+                <input type="hidden" name="action" value="add">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Charge Point</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <select name="location_id" class="form-select" id="locationSelect" required>
+                            <?php foreach ($locations as $loc): ?>
+                                <option value="<?= $loc['id'] ?>"><?= htmlspecialchars($loc['name']) ?> (<?= $loc['city'] ?>)</option>
+                            <?php endforeach; ?>
+                        </select>
+                        <?php if ($isAdmin): ?>
+                        <button type="button" class="btn btn-outline-primary" id="addLocationBtn">Add Location</button>
+                        <?php endif; ?>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Charger Type</label>
+                        <input type="text" name="charger_type" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Status</label>
+                        <select name="status" class="form-select" required>
+                            <option value="available">Available</option>
+                            <option value="in_use">In Use</option>
+                            <option value="offline">Offline</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Availability Days</label>
+                        <div class="d-flex flex-wrap gap-3">
+                            <?php $days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']; ?>
+                            <?php foreach ($days as $day): ?>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox"
+                                    name="availability_days[]" value="<?= $day ?>" id="add-day-<?= $day ?>">
+                                <label class="form-check-label" for="add-day-<?= $day ?>">
+                                    <?= substr($day, 0, 3) ?>
+                                </label>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Price per hour (BHD)</label>
+                        <input type="number" step="0.01" min="0" name="price_per_hour" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Coordinates</label>
+                        <div class="input-group">
+                            <input type="number" step="any" name="latitude"
+                                class="form-control" placeholder="Latitude" required>
+                            <input type="number" step="any" name="longitude"
+                                class="form-control" placeholder="Longitude" required>
+                            <button type="button" class="btn btn-outline-secondary" id="addMapBtn">Pick on Map</button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Charge Point Image</label>
+                        <input type="file" name="image" class="form-control"
+                            accept="image/jpeg, image/png, image/gif">
+                    </div>
+                    <?php if ($isAdmin): ?>
+                    <div class="mb-3">
+                        <label class="form-label">Owner</label>
+                        <select name="owner_id" class="form-select" required>
+                            <?php foreach ($users as $user): ?>
+                                <option value="<?= $user['id'] ?>">
+                                    <?= htmlspecialchars($user['name']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <?php endif; ?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Charge Point</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Add Location Modal -->
+<div class="modal fade" id="addLocationModal" tabindex="-1">
+  <div class="modal-dialog"><div class="modal-content">
+    <form id="addLocationForm">
+      <div class="modal-header"><h5 class="modal-title">Add New Location</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="text" name="name" placeholder="Location Name" class="form-control mb-2" required>
+        <input type="text" name="city" placeholder="City" class="form-control mb-2" required>
+        <input type="text" name="road" placeholder="Road" class="form-control mb-2">
+        <input type="text" name="block" placeholder="Block" class="form-control mb-2">
+        <input type="number" step="any" name="latitude" placeholder="Latitude" class="form-control mb-2">
+        <input type="number" step="any" name="longitude" placeholder="Longitude" class="form-control mb-2">
+        <select name="governorate" class="form-select mb-2">
+            <option value="Capital">Capital</option>
+            <option value="Muharraq">Muharraq</option>
+            <option value="Northern">Northern</option>
+            <option value="Southern">Southern</option>
+        </select>
+        <select name="type" class="form-select mb-2">
+            <option value="government">Government</option>
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+            <option value="residential">Residential</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Add Location</button>
+      </div>
+    </form>
+  </div></div>
+</div>
+<!-- Edit Modal, Map Modal -->
+<div class="modal fade" id="editModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content">
+      <form method="POST" enctype="multipart/form-data" id="editForm">
+        <input type="hidden" name="action" value="edit">
+        <input type="hidden" name="id" id="editId">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Charge Point</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+      </form>
+</div></div></div>
+<div class="modal fade" id="mapModal" tabindex="-1">
+  <div class="modal-dialog modal-lg"><div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Pick Location on Map</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="map-popup" style="height:400px;"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="useLocationBtn" class="btn btn-info">Use My Location</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+  </div></div>
+</div>
+<script src="<?= $baseUrl ?>/js/bootstrap.bundle.min.js"></script>
+<script src="<?= $baseUrl ?>/lib/leaflet/leaflet.js"></script>
+<script src="<?= $baseUrl ?>/js/manageChargePoints.js"></script>
+<?php if (file_exists(__DIR__ . '/template/footer.phtml')) require __DIR__ . '/template/footer.phtml'; ?>

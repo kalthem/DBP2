@@ -1,15 +1,38 @@
 <?php
-$baseUrl = 'http://20.126.5.244/~u202200053/BorrowMyCharger';
+session_start();
+$baseUrl = 'http://20.126.5.244/~u202103011/BorrowMyCharger';
+
+if (!isset($_SESSION['user']['id']) || $_SESSION['user']['role'] !== 'homeowner') {
+    header("Location: index.php?action=login");
+    exit;
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard | Homeowner</title>
-    <!-- You can add CSS links here using $baseUrl if needed -->
-    <!-- <link rel="stylesheet" href="<?= $baseUrl ?>/css/dashboard.css"> -->
+    <title>Homeowner Dashboard</title>
+    <link rel="stylesheet" href="<?= $baseUrl ?>/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= $baseUrl ?>/css/homeOwner.css">
+    <script src="<?= $baseUrl ?>/js/homeOwner.js" defer></script>
 </head>
 <body>
-    <h1>This is the Home Owner dashboard</h1>
+
+<?php include __DIR__ . '/template/header.phtml'; ?>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Homeowner Dashboard</h2>
+    
+    <div id="chargePointSection" class="mb-5">
+        <!-- Loaded via AJAX -->
+    </div>
+
+    <div id="bookingSection">
+        <!-- Loaded via AJAX -->
+    </div>
+</div>
+
+<?php include __DIR__ . '/template/footer.phtml'; ?>
 </body>
 </html>

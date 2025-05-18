@@ -1,18 +1,8 @@
 <?php
-// MUST be first - no whitespace before!
-if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_start();
-}
-ob_start();
-
+session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
-// Prevent caching
-header("Cache-Control: no-cache, no-store, must-revalidate");
-header("Pragma: no-cache");
-header("Expires: 0");
 
 require_once __DIR__ . '/../db_connect.php';
 require_once __DIR__ . '/../Models/User.php';
@@ -49,8 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } elseif ($user['role'] === 'homeowner' && $user['status'] === 'pending') {
                 $loginError = "Your homeowner account is pending approval.";
             } else {
-                session_regenerate_id(true);
-                
+                // Store session info
                 $_SESSION['user'] = [
                     'id' => $user['id'],
                     'username' => $user['username'],
@@ -58,15 +47,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'role' => $user['role'],
                     'status' => $user['status']
                 ];
+                $_SESSION['user_id'] = $user['id'];
 
-                // Always redirect through index.php
-                header("Location: $baseUrl/index.php?action=dashboard");
-                exit();
+                // Redirect to appropriate dashboard
+                switch ($user['role']) {
+                    case 'admin':
+                        $dashboard = $baseUrl . "/index.php?action=admindashboard";
+                        break;
+                    case 'homeowner':
+                        $dashboard = $baseUrl . "/index.php?action=homeownerdashboard"; // ✅ FIXED spelling
+                        break;
+                    case 'user':
+                        $dashboard = $baseUrl . "/index.php?action=userdashboard";
+                        break;
+                    default:
+                        $dashboard = $baseUrl . "/index.php";
+                        break;
+                }
+
+                header("Location: $dashboard");
+                exit;
             }
         }
     }
 }
 
+// If not POST or login failed, show the login form again
 require_once __DIR__ . '/../Views/Login.phtml';
-ob_end_flush();
-?>

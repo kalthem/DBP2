@@ -1,0 +1,70 @@
+<?php
+$baseUrl = 'http://20.126.5.244/~u202103011/BorrowMyCharger';
+$headerPath = __DIR__ . '/template/header.phtml';
+$footerPath = __DIR__ . '/template/footer.phtml';
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Reports</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/admin-style.css">
+</head>
+<body>
+<?php if (file_exists($headerPath)) require $headerPath; ?>
+
+<div class="container my-4">
+    <h2>System Reports</h2>
+
+    <!-- Report Selection Form -->
+    <form method="POST" action="">
+        <div class="mb-3">
+            <label for="report" class="form-label">Select Report</label>
+            <select name="report" id="report" class="form-select" required>
+                <option value="">-- Select a report --</option>
+                <?php foreach ($predefinedReports as $key => $query): ?>
+                    <option value="<?= htmlspecialchars($key) ?>" <?= $selectedReport === $key ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($key) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Run Report</button>
+    </form>
+
+    <!-- Report Results -->
+    <?php if (!empty($reportData)): ?>
+        <div class="mt-4">
+            <h4>Report: <?= htmlspecialchars($selectedReport) ?></h4>
+            <?php if (count($reportData) > 0): ?>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <?php foreach (array_keys($reportData[0]) as $column): ?>
+                                <th><?= htmlspecialchars($column) ?></th>
+                            <?php endforeach; ?>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($reportData as $row): ?>
+                            <tr>
+                                <?php foreach ($row as $value): ?>
+                                    <td><?= htmlspecialchars($value) ?></td>
+                                <?php endforeach; ?>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php else: ?>
+                <p>No data found for this report.</p>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+</div>
+
+<?php if (file_exists($footerPath)) require $footerPath; ?>
+</body>
+</html>

@@ -22,40 +22,36 @@ $chargePoints = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Map View - Charging Points</title>
 
-    <!-- Link to local Leaflet CSS -->
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="<?= $baseUrl ?>/lib/leaflet/leaflet.css">
 
-    <!-- Link to Custom CSS -->
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="<?= $baseUrl ?>/css/mapView.css">
 
-    <!-- Bootstrap for layout -->
-    <link href="<?= $baseUrl ?>/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="<?= $baseUrl ?>/css/bootstrap.min.css">
 
-    <!-- JavaScript libraries -->
+    <!-- Leaflet JS -->
     <script src="<?= $baseUrl ?>/lib/leaflet/leaflet.js"></script>
-
-    <!-- Link to Custom JavaScript -->
-    <script src="<?= $baseUrl ?>/js/mapView.js" defer></script>
 </head>
 <body>
 
-<!-- Header -->
 <?php include __DIR__ . '/template/header.phtml'; ?>
 
 <div class="container mt-5">
     <h2>Available Charging Points on Map</h2>
 
-    <!-- Filter Section -->
+    <!-- Filter Form -->
     <form id="filter-form" method="GET">
         <div class="row mt-4">
             <div class="col-md-4">
-                <input type="text" id="citySearch" class="form-control" placeholder="Search by City">
+                <input type="text" id="citySearch" name="citySearch" class="form-control" placeholder="Search by City">
             </div>
             <div class="col-md-4">
-                <input type="text" id="chargerTypeSearch" class="form-control" placeholder="Charger Type">
+                <input type="text" id="chargerTypeSearch" name="chargerTypeSearch" class="form-control" placeholder="Charger Type">
             </div>
             <div class="col-md-4">
-                <select id="availabilityFilter" class="form-select">
+                <select id="availabilityFilter" name="availabilityFilter" class="form-select">
                     <option value="">Filter by Availability</option>
                     <option value="available">Available</option>
                     <option value="in_use">In Use</option>
@@ -65,27 +61,24 @@ $chargePoints = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </form>
 
-    <!-- Map Div -->
+    <!-- Map -->
     <div id="map" class="mt-4" style="height: 500px;"></div>
 </div>
 
-<!-- Footer -->
 <?php include __DIR__ . '/template/footer.phtml'; ?>
 
+<!-- JavaScript Logic -->
 <script>
-// PHP array passed into JavaScript
-var chargePoints = <?php echo json_encode($chargePoints); ?>;
+var chargePoints = <?= json_encode($chargePoints); ?>;
+let map = L.map('map').setView([26.2285, 50.5861], 12);
 
-// Initialize map
-var map = L.map('map').setView([26.2285, 50.5861], 12);  // Default center (Bahrain)
-
-// Add OpenStreetMap tile layer
+// Add tile layer
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
-    attribution: "&copy; OpenStreetMap contributors",
+    attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-// Attempt to track the user's location
+// Show user location
 if ("geolocation" in navigator) {
     navigator.geolocation.getCurrentPosition(function (position) {
         const userLat = position.coords.latitude;
@@ -98,10 +91,8 @@ if ("geolocation" in navigator) {
     });
 }
 
-// Store charge point markers
 let chargePointMarkers = [];
 
-// Function to display all charge point markers on the map
 function displayAllMarkers() {
     chargePoints.forEach(cp => {
         if (cp.latitude && cp.longitude) {
@@ -109,16 +100,14 @@ function displayAllMarkers() {
             marker.bindPopup(`
                 <strong>${cp.city}</strong><br>
                 Charger Type: ${cp.charger_type}<br>
-                <a href="index.php?page=book_charge_point&id=${cp.id}" class="btn btn-sm btn-primary mt-1">Book</a>
+                <a href="index.php?action=bookchargepoint&id=${cp.id}" class="btn btn-sm btn-primary mt-1">Book</a>
             `);
             chargePointMarkers.push(marker);
         }
     });
 }
 
-// Function for updating the map markers after filtering
 function updateMap(data) {
-    // Remove any existing markers
     chargePointMarkers.forEach(marker => map.removeLayer(marker));
     chargePointMarkers = [];
 
@@ -128,27 +117,25 @@ function updateMap(data) {
             marker.bindPopup(`
                 <strong>${cp.city}</strong><br>
                 Charger Type: ${cp.charger_type}<br>
-                <a href="index.php?page=book_charge_point&id=${cp.id}" class="btn btn-sm btn-primary mt-1">Book</a>
+                <a href="index.php?action=bookchargepoint&id=${cp.id}" class="btn btn-sm btn-primary mt-1">Book</a>
             `);
             chargePointMarkers.push(marker);
         }
     });
 }
 
-// Function to update data based on filter form
 function updateData() {
     const form = document.getElementById('filter-form');
     const formData = new FormData(form);
     const params = new URLSearchParams(formData).toString();
 
-    // Update the map markers with filtered data
-    var xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
     xhr.open('GET', 'Controller/getFilteredChargePoints.php?' + params, true);
     xhr.onload = function () {
         if (xhr.status === 200) {
             try {
                 const data = JSON.parse(xhr.responseText);
-                updateMap(data);  // Update the map with filtered charge points
+                updateMap(data);
             } catch (e) {
                 console.error("Invalid JSON from server:", xhr.responseText);
             }
@@ -157,14 +144,12 @@ function updateData() {
     xhr.send();
 }
 
-// Debouncing input event listener for the filter form
 let debounceTimer;
 document.getElementById('filter-form').addEventListener('input', function () {
     clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(updateData, 300); // Wait 300ms after the user stops typing
+    debounceTimer = setTimeout(updateData, 300);
 });
 
-// Display all markers on page load
 displayAllMarkers();
 </script>
 
