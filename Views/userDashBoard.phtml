@@ -75,9 +75,10 @@ if (file_exists($headerPath) && is_readable($headerPath)) {
     <h2 class="text-center my-4">Welcome, <?= $username ?></h2>
     
     <div class="d-flex justify-content-between mb-4">
-        <a href="<?= $baseUrl ?>/Views/mapView.phtml" class="btn btn-primary">🗺️ View on Map</a>
-        <a href="<?= $baseUrl ?>/Views/bookingHistory.phtml" class="btn btn-secondary">📜 Booking History</a>
-    </div>
+    <a href="<?= $baseUrl ?>/index.php?action=mapview" class="btn btn-primary">🗺️ View on Map</a>
+    <a href="<?= $baseUrl ?>/index.php?action=mybookings" class="btn btn-secondary">📜 My Bookings</a>
+</div>
+
 
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">

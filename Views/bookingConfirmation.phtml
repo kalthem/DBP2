@@ -1,145 +1,46 @@
 <?php
-// MUST be first - no whitespace before!
-if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_start();
-}
-
-// Define base paths
+if (session_status() !== PHP_SESSION_ACTIVE) session_start();
 $baseUrl = 'http://20.126.5.244/~u202103011/BorrowMyCharger';
-$basePath = '/home/u202103011/public_html/BorrowMyCharger';
+include __DIR__ . '/template/header.phtml';
 
-// Secure session check
-if (empty($_SESSION['user']['id'])) {
-    header("Location: $baseUrl/index.php?action=login");
+// Make sure booking details exist
+$booking = $_SESSION['booking_confirmation'] ?? null;
+if (!$booking) {
+    echo '<div class="alert alert-danger mt-4">Booking details not found.</div>';
+    include __DIR__ . '/template/footer.phtml';
     exit;
-}
-
-// Get username safely
-$username = !empty($_SESSION['user']['name']) ? htmlspecialchars($_SESSION['user']['name']) : 'User';
-
-// Check if charge point ID is provided
-if (empty($_GET['charge_point_id'])) {
-    header("Location: $baseUrl/Views/userDashBoard.phtml");
-    exit;
-}
-
-require_once $basePath . '/Models/ChargePoint.php';
-require_once $basePath . '/Models/Booking.php';
-require_once $basePath . '/Models/User.php';
-require_once $basePath . '/db_connect.php';
-
-$database = Database::getInstance();
-$pdo = $database->getdbConnection();
-$chargePointModel = new ChargePoint($pdo);
-$bookingModel = new Booking($pdo);
-$userModel = new User($pdo);
-
-// Get charge point details
-$chargePointId = (int)$_GET['charge_point_id'];
-$chargePoint = $chargePointModel->getChargePointById($chargePointId);
-
-if (!$chargePoint) {
-    header("Location: $baseUrl/Views/userDashBoard.phtml");
-    exit;
-}
-
-// Get location details
-$location = $chargePointModel->getLocationDetails($chargePoint['location_id']);
-
-// Define header/footer paths
-$headerPath = __DIR__ . '/template/header.phtml';
-$footerPath = __DIR__ . '/template/footer.phtml';
-?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Booking Confirmation - BorrowMyCharger</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="base-url" content="<?= $baseUrl ?>">
-    <link rel="stylesheet" href="<?= $baseUrl ?>/css/bootstrap.min.css">
-    <link rel="stylesheet" href="<?= $baseUrl ?>/css/my-style.css">
-</head>
-<body>
-
-<!-- Header -->
-<?php 
-if (file_exists($headerPath) && is_readable($headerPath)) {
-    include $headerPath;
 }
 ?>
 
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0">Booking Confirmation</h3>
-                </div>
-                <div class="card-body">
-                    <h4 class="mb-4">Confirm Your Booking Details</h4>
-                    
-                    <div class="alert alert-success">
-                        <p>You are about to book the following charger:</p>
-                        <ul class="mb-0">
-                            <li><strong>Type:</strong> <?= htmlspecialchars($chargePoint['charger_type']) ?></li>
-                            <li><strong>Location:</strong> <?= htmlspecialchars($location['name']) ?>, <?= htmlspecialchars($location['city']) ?></li>
-                            <li><strong>Address:</strong> <?= htmlspecialchars($location['road']) ?>, Block <?= htmlspecialchars($location['block']) ?></li>
-                            <li><strong>Governorate:</strong> <?= htmlspecialchars($location['governorate']) ?></li>
-                        </ul>
-                    </div>
-                    
-                    <form id="bookingForm" method="post" action="<?= $baseUrl ?>/Controllers/BookingController.php">
-                        <input type="hidden" name="action" value="confirmBooking">
-                        <input type="hidden" name="charge_point_id" value="<?= $chargePointId ?>">
-                        
-                        <div class="mb-3">
-                            <label for="start_time" class="form-label">Start Time</label>
-                            <input type="datetime-local" class="form-control" id="start_time" name="start_time" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="end_time" class="form-label">End Time</label>
-                            <input type="datetime-local" class="form-control" id="end_time" name="end_time" required>
-                        </div>
-                        
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">Confirm Booking</button>
-                            <a href="<?= $baseUrl ?>/Views/userDashBoard.phtml" class="btn btn-outline-secondary">Cancel</a>
-                        </div>
-                    </form>
-                    
-                    <hr class="my-4">
-                    
-                    <div class="contact-homeowner">
-                        <h5>Need to contact the homeowner?</h5>
-                        <form id="contactForm" method="post" action="<?= $baseUrl ?>/Controllers/MessageController.php">
-                            <input type="hidden" name="action" value="sendMessage">
-                            <input type="hidden" name="charge_point_id" value="<?= $chargePointId ?>">
-                            <input type="hidden" name="owner_id" value="<?= $chargePoint['owner_id'] ?>">
-                            
-                            <div class="mb-3">
-                                <label for="message" class="form-label">Your Message</label>
-                                <textarea class="form-control" id="message" name="message" rows="3" required></textarea>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-outline-primary">Send Message</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+<link rel="stylesheet" href="<?= $baseUrl ?>/css/booking.css">
+
+<div class="container mt-5 mb-5">
+    <div class="card shadow-sm p-4">
+        <h2 class="mb-4 text-success">
+            <i class="bi bi-check-circle-fill"></i> Booking Confirmed!
+        </h2>
+
+        <p class="lead">Thank you for your booking. A confirmation message has been sent to the homeowner.</p>
+
+        <div class="mb-4">
+            <h5>Booking Summary:</h5>
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Charge Point ID:</strong> <?= htmlspecialchars($booking['charge_point_id']) ?></li>
+                <li class="list-group-item"><strong>Start Time:</strong> <?= htmlspecialchars($booking['start_time']) ?></li>
+                <li class="list-group-item"><strong>End Time:</strong> <?= htmlspecialchars($booking['end_time']) ?></li>
+                <li class="list-group-item"><strong>Your Message:</strong> <?= nl2br(htmlspecialchars($booking['message'])) ?></li>
+            </ul>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <a href="<?= $baseUrl ?>/index.php?action=dashboard" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
+            </a>
+            <a href="<?= $baseUrl ?>/index.php?action=mybookings" class="btn btn-primary">
+                <i class="bi bi-list-check"></i> View My Bookings
+            </a>
         </div>
     </div>
 </div>
 
-<!-- Footer -->
-<?php 
-if (file_exists($footerPath) && is_readable($footerPath)) {
-    include $footerPath;
-}
-?>
-
-<script src="<?= $baseUrl ?>/js/bookingConfirmation.js"></script>
-</body>
-</html>
+<?php include __DIR__ . '/template/footer.phtml'; ?>

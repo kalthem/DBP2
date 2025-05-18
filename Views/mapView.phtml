@@ -1,0 +1,172 @@
+<?php
+session_start();
+$baseUrl = 'http://20.126.5.244/~u202103011/BorrowMyCharger';
+
+// Include your database connection
+require_once __DIR__ . '/../db_connect.php';
+$database = Database::getInstance();
+$pdo = $database->getdbConnection();
+
+// Fetch charge points with latitude and longitude
+$stmt = $pdo->prepare("SELECT c.id, c.location_id, c.charger_type, l.city, l.latitude, l.longitude 
+                       FROM charge_point c 
+                       JOIN location l ON c.location_id = l.id");
+$stmt->execute();
+$chargePoints = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map View - Charging Points</title>
+
+    <!-- Link to local Leaflet CSS -->
+    <link rel="stylesheet" href="<?= $baseUrl ?>/lib/leaflet/leaflet.css">
+
+    <!-- Link to Custom CSS -->
+    <link rel="stylesheet" href="<?= $baseUrl ?>/css/mapView.css">
+
+    <!-- Bootstrap for layout -->
+    <link href="<?= $baseUrl ?>/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- JavaScript libraries -->
+    <script src="<?= $baseUrl ?>/lib/leaflet/leaflet.js"></script>
+
+    <!-- Link to Custom JavaScript -->
+    <script src="<?= $baseUrl ?>/js/mapView.js" defer></script>
+</head>
+<body>
+
+<!-- Header -->
+<?php include __DIR__ . '/template/header.phtml'; ?>
+
+<div class="container mt-5">
+    <h2>Available Charging Points on Map</h2>
+
+    <!-- Filter Section -->
+    <form id="filter-form" method="GET">
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <input type="text" id="citySearch" class="form-control" placeholder="Search by City">
+            </div>
+            <div class="col-md-4">
+                <input type="text" id="chargerTypeSearch" class="form-control" placeholder="Charger Type">
+            </div>
+            <div class="col-md-4">
+                <select id="availabilityFilter" class="form-select">
+                    <option value="">Filter by Availability</option>
+                    <option value="available">Available</option>
+                    <option value="in_use">In Use</option>
+                    <option value="offline">Offline</option>
+                </select>
+            </div>
+        </div>
+    </form>
+
+    <!-- Map Div -->
+    <div id="map" class="mt-4" style="height: 500px;"></div>
+</div>
+
+<!-- Footer -->
+<?php include __DIR__ . '/template/footer.phtml'; ?>
+
+<script>
+// PHP array passed into JavaScript
+var chargePoints = <?php echo json_encode($chargePoints); ?>;
+
+// Initialize map
+var map = L.map('map').setView([26.2285, 50.5861], 12);  // Default center (Bahrain)
+
+// Add OpenStreetMap tile layer
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: "&copy; OpenStreetMap contributors",
+}).addTo(map);
+
+// Attempt to track the user's location
+if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(function (position) {
+        const userLat = position.coords.latitude;
+        const userLon = position.coords.longitude;
+        L.marker([userLat, userLon])
+            .addTo(map)
+            .bindPopup("You are here")
+            .openPopup();
+        map.setView([userLat, userLon], 13);
+    });
+}
+
+// Store charge point markers
+let chargePointMarkers = [];
+
+// Function to display all charge point markers on the map
+function displayAllMarkers() {
+    chargePoints.forEach(cp => {
+        if (cp.latitude && cp.longitude) {
+            const marker = L.marker([parseFloat(cp.latitude), parseFloat(cp.longitude)]).addTo(map);
+            marker.bindPopup(`
+                <strong>${cp.city}</strong><br>
+                Charger Type: ${cp.charger_type}<br>
+                <a href="index.php?page=book_charge_point&id=${cp.id}" class="btn btn-sm btn-primary mt-1">Book</a>
+            `);
+            chargePointMarkers.push(marker);
+        }
+    });
+}
+
+// Function for updating the map markers after filtering
+function updateMap(data) {
+    // Remove any existing markers
+    chargePointMarkers.forEach(marker => map.removeLayer(marker));
+    chargePointMarkers = [];
+
+    data.forEach(cp => {
+        if (cp.latitude && cp.longitude) {
+            const marker = L.marker([parseFloat(cp.latitude), parseFloat(cp.longitude)]).addTo(map);
+            marker.bindPopup(`
+                <strong>${cp.city}</strong><br>
+                Charger Type: ${cp.charger_type}<br>
+                <a href="index.php?page=book_charge_point&id=${cp.id}" class="btn btn-sm btn-primary mt-1">Book</a>
+            `);
+            chargePointMarkers.push(marker);
+        }
+    });
+}
+
+// Function to update data based on filter form
+function updateData() {
+    const form = document.getElementById('filter-form');
+    const formData = new FormData(form);
+    const params = new URLSearchParams(formData).toString();
+
+    // Update the map markers with filtered data
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'Controller/getFilteredChargePoints.php?' + params, true);
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            try {
+                const data = JSON.parse(xhr.responseText);
+                updateMap(data);  // Update the map with filtered charge points
+            } catch (e) {
+                console.error("Invalid JSON from server:", xhr.responseText);
+            }
+        }
+    };
+    xhr.send();
+}
+
+// Debouncing input event listener for the filter form
+let debounceTimer;
+document.getElementById('filter-form').addEventListener('input', function () {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(updateData, 300); // Wait 300ms after the user stops typing
+});
+
+// Display all markers on page load
+displayAllMarkers();
+</script>
+
+</body>
+</html>

@@ -522,4 +522,25 @@ footer {
     color: #6c757d;
     font-style: italic;
 }
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content-wrapper {
+    flex: 1 0 auto;
+    padding-bottom: 30px; /* Ensure footer doesn't overlap content */
+}
+
+footer {
+    flex-shrink: 0;
+}
+
 

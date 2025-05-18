@@ -4,32 +4,44 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Hardcoded full path to your actual project folder
+// Absolute base path to your project
 $basePath = '/home/u202103011/public_html/BorrowMyCharger';
+$viewsPath = $basePath . '/Views';
 
-// Get lowercase action for consistency
+// Handle logout
+if (isset($_GET['action']) && $_GET['action'] === 'logout') {
+    session_destroy();
+    header("Location: $baseUrl/index.php?action=home");
+    exit;
+}
+
+// Allowed actions and their corresponding view files
+$routes = [
+    'about' => 'About.phtml',
+    'howitworks' => 'HowItWorks.phtml',
+    'login' => 'Login.phtml',
+    'register' => 'register.phtml',
+    'dashboard' => 'userDashBoard.phtml',
+    'bookchargepoint' => 'bookChargePoint.phtml',
+    'bookingconfirmation' => 'bookingConfirmation.phtml',
+    'bookingsuccess' => 'booking_success.phtml',
+    'mybookings' => 'my_bookings.phtml',
+    'mapview' => 'mapView.phtml',
+    'home' => 'index.phtml'
+];
+
+// Get route from URL and default to 'home'
 $action = strtolower($_GET['action'] ?? 'home');
 
-switch ($action) {
-    case 'about':
-        require $basePath . '/Views/About.phtml';
-        break;
-    case 'howitworks':
-        require $basePath . '/Views/HowItWorks.phtml';
-        break;
-    case 'login':
-        require $basePath . '/Views/Login.phtml';
-        break;
-    case 'register':
-        require $basePath . '/Views/register.phtml';
-        break;
-    case 'dashboard':
-        require $basePath . '/Views/userDashBoard.phtml';
-        break;
-    case 'home':
-    default:
-        require $basePath . '/Views/index.phtml';
-        break;
-    
-    
+// Load the appropriate view
+if (array_key_exists($action, $routes)) {
+    $viewFile = $viewsPath . '/' . $routes[$action];
+    if (file_exists($viewFile)) {
+        require $viewFile;
+    } else {
+        echo "<h3 style='color: red;'>Error: View file for '$action' not found.</h3>";
+    }
+} else {
+    echo "<h3 style='color: red;'>Error: Invalid page action '$action'.</h3>";
 }
+

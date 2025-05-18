@@ -1,0 +1,101 @@
+<?php
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+$baseUrl = 'http://20.126.5.244/~u202103011/BorrowMyCharger';
+
+// Redirect if not logged in
+if (!isset($_SESSION['user']['id'])) {
+    header("Location: $baseUrl/index.php?action=login");
+    exit;
+}
+
+include __DIR__ . '/template/header.phtml';
+
+require_once __DIR__ . '/../db_connect.php';
+
+$userId = $_SESSION['user']['id'];
+$db = Database::getInstance()->getdbConnection();
+
+// Fetch bookings for the current user
+$stmt = $db->prepare("
+    SELECT 
+        b.id AS booking_id,
+        b.start_time,
+        b.end_time,
+        b.status,
+        c.charger_type,
+        l.name AS location_name,
+        l.city,
+        c.image_url
+    FROM booking b
+    JOIN charge_point c ON b.charge_point_id = c.id
+    JOIN location l ON c.location_id = l.id
+    WHERE b.user_id = ?
+    ORDER BY b.created_at DESC
+");
+$stmt->execute([$userId]);
+$bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings - Borrow My Charger</title>
+    <link rel="stylesheet" href="<?= $baseUrl ?>/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= $baseUrl ?>/css/my-style.css">
+</head>
+<body>
+    <!-- Header -->
+    <?php include __DIR__ . '/template/header.phtml'; ?>
+
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        <div class="container mt-5">
+            <h2 class="mb-4">My Bookings</h2>
+
+            <?php if (empty($bookings)): ?>
+                <div class="alert alert-info">You have not made any bookings yet.</div>
+            <?php else: ?>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Image</th>
+                                <th>Location</th>
+                                <th>City</th>
+                                <th>Charger Type</th>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($bookings as $booking): ?>
+                                <tr>
+                                    <td>
+                                        <img src="<?= !empty($booking['image_url']) ? htmlspecialchars($baseUrl . $booking['image_url']) : "$baseUrl/images/default-charger.jpg" ?>" 
+                                            alt="Charger" 
+                                            style="width: 80px; height: 60px; object-fit: cover; border-radius: 5px;">
+                                    </td>
+                                    <td><?= htmlspecialchars($booking['location_name']) ?></td>
+                                    <td><?= htmlspecialchars($booking['city']) ?></td>
+                                    <td><?= htmlspecialchars($booking['charger_type']) ?></td>
+                                    <td><?= date('Y-m-d H:i', strtotime($booking['start_time'])) ?></td>
+                                    <td><?= date('Y-m-d H:i', strtotime($booking['end_time'])) ?></td>
+                                    <td><span class="badge bg-secondary"><?= ucfirst($booking['status']) ?></span></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <?php include __DIR__ . '/template/footer.phtml'; ?>
+</body>
+</html>

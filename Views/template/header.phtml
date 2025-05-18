@@ -8,11 +8,18 @@ $currentAction = strtolower($_GET['action'] ?? 'home');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Styles -->
+    <!-- Bootstrap CSS -->
     <link href="<?= $baseUrl ?>/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Font Awesome (for social icons) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
     <link href="<?= $baseUrl ?>/css/my-style.css" rel="stylesheet">
 
-    <!-- Title -->
     <title>Borrow My Charger - Find EV Charging Points</title>
 </head>
 
@@ -40,9 +47,10 @@ $currentAction = strtolower($_GET['action'] ?? 'home');
                 </ul>
 
                 <div class="d-flex">
-                    <a href="<?= $baseUrl ?>/index.php?action=login" class="btn btn-secondary">Login</a>
+                    <a href="<?= $baseUrl ?>/index.php?action=login" class="btn btn-secondary me-2">Login</a>
                     <a href="<?= $baseUrl ?>/index.php?action=register" class="btn btn-primary">Register</a>
                 </div>
             </div>
         </div>
     </nav>
+    <div style="padding-top: 40px"></div> <!-- Adds space below fixed navbar -->
